@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" fill="none">
+  <!-- Background blobs -->
+  <ellipse cx="80" cy="170" rx="60" ry="18" fill="#b68973" opacity="0.12"/>
+
+  <!-- Bottom-left person -->
+  <circle cx="32" cy="128" r="14" fill="#8b89b6"/>
+  <path d="M14 166 C14 148 50 148 50 166" fill="#8b89b6"/>
+
+  <!-- Bottom-right person -->
+  <circle cx="128" cy="128" r="14" fill="#a8a6c8"/>
+  <path d="M110 166 C110 148 146 148 146 166" fill="#a8a6c8"/>
+
+  <!-- Centre main person -->
+  <circle cx="80" cy="100" r="20" fill="#6e6c9e"/>
+  <path d="M52 148 C52 126 108 126 108 148" fill="#6e6c9e"/>
+
+  <!-- Speech bubble left -->
+  <rect x="8" y="72" width="36" height="22" rx="8" fill="#ffffff" opacity="0.9"/>
+  <polygon points="20,94 14,102 26,94" fill="#ffffff" opacity="0.9"/>
+  <!-- Bubble lines -->
+  <rect x="14" y="79" width="22" height="3" rx="1.5" fill="#8b89b6" opacity="0.6"/>
+  <rect x="14" y="85" width="16" height="3" rx="1.5" fill="#8b89b6" opacity="0.4"/>
+
+  <!-- Speech bubble right -->
+  <rect x="116" y="60" width="36" height="22" rx="8" fill="#ffffff" opacity="0.9"/>
+  <polygon points="128,82 122,90 134,82" fill="#ffffff" opacity="0.9"/>
+  <!-- Bubble lines -->
+  <rect x="122" y="67" width="22" height="3" rx="1.5" fill="#8b89b6" opacity="0.6"/>
+  <rect x="122" y="73" width="16" height="3" rx="1.5" fill="#8b89b6" opacity="0.4"/>
+
+  <!-- Heart / like above centre -->
+  <circle cx="80" cy="66" r="12" fill="#b68973" opacity="0.18"/>
+  <path d="M80 72 C80 72 72 66 72 61 C72 57.7 74.7 55 78 55 C79.1 55 80 55.6 80 55.6 C80 55.6 80.9 55 82 55 C85.3 55 88 57.7 88 61 C88 66 80 72 80 72Z" fill="#b68973"/>
+
+  <!-- Stars / sparkles -->
+  <circle cx="56" cy="44" r="3" fill="#b68973" opacity="0.5"/>
+  <circle cx="104" cy="40" r="2" fill="#b68973" opacity="0.4"/>
+  <circle cx="40" cy="56" r="2" fill="#6e6c9e" opacity="0.3"/>
+</svg>

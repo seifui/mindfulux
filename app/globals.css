@@ -2,119 +2,270 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@config "../tailwind.config.ts";
+
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   STATIC BRAND TOKENS
+   Values that do not change between light and dark mode.
+   These generate Tailwind utility classes: rounded-card, shadow-book,
+   font-display, font-sinhala, etc.
+───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Border radii */
+  --radius-card:  0.75rem;  /* 12px — general UI cards                             */
+  --radius-skill: 1rem;     /* 16px — Featured skills cards (Figma node 4578-1598)  */
+  --radius-skill-well: 0.75rem; /* 12px — illustration inset                         */
+  --radius-promo: 2.5rem;   /* 40px — Book & Community promo cards (Figma node 4573-1596) */
+  --radius-pill:  9999px;   /* pill — search bar, newsletter inputs, icon buttons  */
+
+  /* Box shadows */
+  --shadow-book:  3.772px 9.429px 7.287px 0px rgba(1, 1, 1, 0.15); /* book mockup drop shadow */
+  --shadow-promo: 0 8px 24px 0 rgba(79, 64, 64, 0.10);             /* promo card ambient lift  */
+
+  /* Sinhala: next/font Noto Sans Sinhala on <html> (--font-sinhala) */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DYNAMIC TOKENS
+   All values are CSS variable references so dark mode overrides work at runtime.
+   Generates: bg-background, text-foreground, bg-cream, text-accent-brand, etc.
+───────────────────────────────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
+  /* ── Shadcn / Radix semantic tokens ──────────────────────────────────────── */
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-popover:              var(--popover);
+  --color-popover-foreground:   var(--popover-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar:                    var(--sidebar);
+  --color-sidebar-foreground:         var(--sidebar-foreground);
+  --color-sidebar-primary:            var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:             var(--sidebar-accent);
+  --color-sidebar-accent-foreground:  var(--sidebar-accent-foreground);
+  --color-sidebar-border:             var(--sidebar-border);
+  --color-sidebar-ring:               var(--sidebar-ring);
+
+  /* Radius scale (based on --radius base value) */
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Font slots — --font-body from next/font Inter on <html> */
+  --font-sans:    var(--font-body);
+  --font-mono:    var(--font-geist-mono);
+  --font-heading: var(--font-body);
+
+  /* ── MindfulUX brand color tokens ─────────────────────────────────────────
+     Named tokens from the Figma variable library and inline design values.
+     Usage: bg-cream, text-ink, bg-lavender, text-accent-brand, etc.
+  ──────────────────────────────────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --color-cream:       var(--cream);       /* #eee8e1 — page background                          */
+  --color-lavender:    var(--lavender);    /* #d5d4e2 — Community promo card background           */
+  --color-tan:         var(--tan);         /* #decfc4 — Book promo card background                */
+  --color-featured-strip: var(--featured-strip); /* Featured skills section band (#f2ece4)        */
+  --color-skill-card:  var(--skill-card);  /* principle card surface (#e8e0d5)                    */
+  --color-skill-well:  var(--skill-well);  /* illustration inset (warm off-white)                  */
+  --color-card-fill:   var(--card-fill);   /* rgba(182,137,115,0.14) — legacy skill tint          */
+  --color-input-fill:  var(--input-fill);  /* rgba(31,53,97,0.04) — search + newsletter input bg  */
+
+  /* Text */
+  --color-ink:           var(--ink);           /* rgba(24,28,32,0.9) — headings, primary text    */
+  --color-ink-secondary: var(--ink-secondary); /* rgba(0,13,33,0.8) — button labels              */
+  --color-muted-text:    var(--muted-text);    /* rgba(6,26,64,0.6) — placeholders, muted copy   */
+
+  /* Brand accent */
+  --color-accent-brand: var(--accent-brand); /* #b68973 — terracotta; "AI skills", active nav, search btn */
+  --color-brand-dark:   var(--brand-dark);   /* #4f4040 — logo wordmark, dark brand variant               */
+
+  /* Borders */
+  --color-border-subtle: var(--border-subtle); /* rgba(31,53,97,0.16) — card/button edges          */
+  --color-border-strong: var(--border-strong); /* rgba(0,13,33,0.8)  — pill button outlines        */
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE  (Figma exact values)
+───────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* ── Shadcn semantic tokens ──────────────────────────────────────────────── */
+
+  --background:           #eee8e1;                      /* cream page background                   */
+  --foreground:           rgba(24, 28, 32, 0.9);        /* ink — all headings & primary text       */
+
+  --card:                 #ffffff;                      /* white card surface on cream bg          */
+  --card-foreground:      rgba(24, 28, 32, 0.9);
+
+  --popover:              #ffffff;
+  --popover-foreground:   rgba(24, 28, 32, 0.9);
+
+  --primary:              #b68973;                      /* brand terracotta accent                 */
+  --primary-foreground:   #ffffff;
+
+  --secondary:            rgba(182, 137, 115, 0.14);    /* card-fill — skill card bg               */
+  --secondary-foreground: rgba(24, 28, 32, 0.9);
+
+  --muted:                rgba(31, 53, 97, 0.04);       /* input-fill — search bar tint            */
+  --muted-foreground:     rgba(6, 26, 64, 0.6);         /* muted-text — placeholders               */
+
+  --accent:               rgba(182, 137, 115, 0.14);    /* card-fill — secondary interaction bg    */
+  --accent-foreground:    rgba(24, 28, 32, 0.9);
+
+  --destructive:          oklch(0.577 0.245 27.325);
+
+  --border:               rgba(31, 53, 97, 0.16);       /* border-subtle — card/icon button edges  */
+  --input:                rgba(31, 53, 97, 0.16);
+  --ring:                 #b68973;                      /* accent focus ring                       */
+
+  /* Charts — mapped to brand palette */
+  --chart-1: #b68973;   /* accent terracotta  */
+  --chart-2: #4f4040;   /* brand-dark         */
+  --chart-3: #decfc4;   /* tan                */
+  --chart-4: #d5d4e2;   /* lavender           */
+  --chart-5: #eee8e1;   /* cream              */
+
+  --radius: 0.75rem;    /* 12px base — skill card radius; scale multipliers in @theme inline */
+
+  /* Sidebar */
+  --sidebar:                    #eee8e1;
+  --sidebar-foreground:         rgba(24, 28, 32, 0.9);
+  --sidebar-primary:            #b68973;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:             rgba(182, 137, 115, 0.14);
+  --sidebar-accent-foreground:  rgba(24, 28, 32, 0.9);
+  --sidebar-border:             rgba(31, 53, 97, 0.16);
+  --sidebar-ring:               #b68973;
+
+  /* ── MindfulUX brand tokens ──────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --cream:      #eee8e1;                      /* Colors/App main backgrounds/Sunken             */
+  --lavender:   #d5d4e2;                      /* Community promo card (Frame 1112)              */
+  --tan:        #decfc4;                      /* Book promo card (Frame 1113)                   */
+  --card-fill:  rgba(182, 137, 115, 0.14);   /* Colors/Background/bg-brand-100                 */
+  --input-fill: rgba(31, 53, 97, 0.04);      /* Colors/Background/bg-gray-50                   */
+
+  /* Text */
+  --ink:           rgba(24, 28, 32, 0.9);    /* Colors/Text/text-gray-800  (#181c20 @ 90%)      */
+  --ink-secondary: rgba(0, 13, 33, 0.8);     /* Colors/Text/text-gray-700  (#000d21 @ 80%)      */
+  --muted-text:    rgba(6, 26, 64, 0.6);     /* Colors/Text/text-gray-500  (#061a40 @ 60%)      */
+
+  /* Brand accent */
+  --accent-brand: #b68973;  /* Colors/Background/bg-brand-600 = Colors/Text/text-brand-600 = Colors/Icon/icon-brand-600 */
+  --brand-dark:   #4f4040;  /* Colors/Text/text-brand-700 = Colors/Background/bg-brand-700 */
+
+  /* Borders */
+  --border-subtle: rgba(31, 53, 97, 0.16);  /* Colors/Border/border-gray-300  (#1f3561 @ 16%) */
+  --border-strong: rgba(0, 13, 33, 0.8);    /* Colors/Border/border-gray-700  (#000d21 @ 80%) */
+
+  /* Featured skills row (Figma 4578-1598): strip + cards */
+  --featured-strip: #f2ece4;
+  --skill-card: #e8e0d5;
+  --skill-well: #faf8f5;
+
+  /* --font-body / --font-display / --font-sinhala come from next/font on <html> (layout.tsx). */
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   DARK MODE  (warm dark inverse — preserves brand identity)
+───────────────────────────────────────────────────────────────────────────── */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* ── Shadcn semantic tokens ──────────────────────────────────────────────── */
+
+  --background:           #1c1714;                      /* deep warm brown — dark bg               */
+  --foreground:           #eee8e1;                      /* cream — all text on dark                */
+
+  --card:                 #252019;                      /* elevated dark surface                   */
+  --card-foreground:      #eee8e1;
+
+  --popover:              #252019;
+  --popover-foreground:   #eee8e1;
+
+  --primary:              #b68973;                      /* accent unchanged — reads well on dark    */
+  --primary-foreground:   #1c1714;
+
+  --secondary:            rgba(238, 232, 225, 0.08);    /* cream tint for secondary surfaces       */
+  --secondary-foreground: #eee8e1;
+
+  --muted:                rgba(238, 232, 225, 0.08);
+  --muted-foreground:     rgba(238, 232, 225, 0.6);     /* cream @ 60%                             */
+
+  --accent:               rgba(238, 232, 225, 0.08);
+  --accent-foreground:    #eee8e1;
+
+  --destructive:          oklch(0.704 0.191 22.216);
+
+  --border:               rgba(238, 232, 225, 0.12);    /* cream @ 12% — subtle dark borders       */
+  --input:                rgba(238, 232, 225, 0.12);
+  --ring:                 #b68973;
+
+  /* Charts */
+  --chart-1: #b68973;
+  --chart-2: #decfc4;
+  --chart-3: #d5d4e2;
+  --chart-4: #4f4040;
+  --chart-5: #252019;
+
+  /* Sidebar */
+  --sidebar:                    #252019;
+  --sidebar-foreground:         #eee8e1;
+  --sidebar-primary:            #b68973;
+  --sidebar-primary-foreground: #1c1714;
+  --sidebar-accent:             rgba(238, 232, 225, 0.08);
+  --sidebar-accent-foreground:  #eee8e1;
+  --sidebar-border:             rgba(238, 232, 225, 0.12);
+  --sidebar-ring:               #b68973;
+
+  /* ── MindfulUX brand tokens (dark overrides) ─────────────────────────────── */
+
+  /* Backgrounds */
+  --card-fill:  rgba(182, 137, 115, 0.12);    /* slightly reduced opacity on dark            */
+  --input-fill: rgba(238, 232, 225, 0.05);    /* very subtle cream tint for inputs           */
+
+  /* Text — inverted to cream family */
+  --ink:           rgba(238, 232, 225, 0.9);  /* cream @ 90%                                 */
+  --ink-secondary: rgba(238, 232, 225, 0.8);  /* cream @ 80%                                 */
+  --muted-text:    rgba(238, 232, 225, 0.5);  /* cream @ 50%                                 */
+
+  /* Borders */
+  --border-subtle: rgba(238, 232, 225, 0.12); /* cream @ 12%                                 */
+  --border-strong: rgba(238, 232, 225, 0.8);  /* cream @ 80%                                 */
+
+  /* Brand colors — unchanged; they are absolute brand values */
+  /* --cream, --lavender, --tan, --accent-brand, --brand-dark remain as in :root */
+
+  --featured-strip: #242220;
+  --skill-card: #2a2622;
+  --skill-well: #1f1c18;
 }
 
 @layer base {
@@ -126,5 +277,13 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Hides the scrollbar while preserving scroll functionality (used by HorizontalScrollSection) */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
