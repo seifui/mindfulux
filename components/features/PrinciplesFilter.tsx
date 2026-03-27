@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 import { cn } from "@/lib/utils";
+import { trackFilterApplied, trackSortChanged } from "@/lib/analytics";
 
 interface PrinciplesFilterProps {
   categories: string[];
@@ -40,11 +41,15 @@ export function PrinciplesFilter({ categories }: PrinciplesFilterProps) {
   );
 
   const handleCategoryClick = (category: string) => {
-    router.push(buildHref({ category: category === activeCategory ? null : category }));
+    const next = category === activeCategory ? "" : category;
+    if (next) trackFilterApplied("category", next);
+    router.push(buildHref({ category: next || null }));
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    router.push(buildHref({ sort: e.target.value || null }));
+    const value = e.target.value;
+    if (value) trackSortChanged(value);
+    router.push(buildHref({ sort: value || null }));
   };
 
   return (

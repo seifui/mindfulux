@@ -1,20 +1,29 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+import { trackPrincipleCardClicked } from "@/lib/analytics";
 
 interface PrincipleCardProps {
   title: string;
   description: string;
   imageUrl?: string;
   className?: string;
+  position?: number;
+  section?: string;
 }
 
-export function PrincipleCard({ title, description, className }: PrincipleCardProps) {
+export function PrincipleCard({ title, description, className, position = 0, section = "principles-grid" }: PrincipleCardProps) {
   const slug = title.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <Link href={`/principles/${slug}`} className="block">
+    <Link
+      href={`/principles/${slug}`}
+      className="block"
+      onClick={() => trackPrincipleCardClicked(slug, position, section)}
+    >
     <article className={cn("flex w-[297px] shrink-0 snap-start flex-col gap-5 rounded-card bg-card-fill p-6 cursor-pointer transition-shadow hover:shadow-promo", className)}>
       {/* Illustration */}
       <div className="relative aspect-[2/1] w-full overflow-hidden rounded-card bg-gray-100">

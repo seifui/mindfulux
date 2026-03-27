@@ -24,12 +24,14 @@ export function PrinciplesGrid({ principles, initialCount = 9 }: PrinciplesGridP
   return (
     <div className="flex flex-col items-center gap-10">
       <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {visible.map((principle) => (
+        {visible.map((principle, index) => (
           <PrincipleCard
             key={principle.title}
             title={principle.title}
             description={principle.description}
             className="w-full"
+            position={index}
+            section="principles-grid"
           />
         ))}
       </div>

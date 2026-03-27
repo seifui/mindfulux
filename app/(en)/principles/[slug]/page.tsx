@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { PrincipleCard } from "@/components/features/PrincipleCard";
+import { PrincipleViewTracker } from "@/components/features/PrincipleViewTracker";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -248,6 +249,7 @@ export default async function PrincipleDetailPage({
   return (
     <div className="flex min-h-full flex-col">
       <Navbar />
+      <PrincipleViewTracker slug={principle.slug} category={principle.category} />
 
       <main className="flex flex-1 flex-col pb-20">
         {/* ── Article column (680px max, centred) ─────────────────────────── */}

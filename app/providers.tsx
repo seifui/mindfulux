@@ -12,10 +12,9 @@ function PageViewTracker() {
   useEffect(() => {
     if (pathname) {
       const url =
-        window.origin +
         pathname +
         (searchParams.toString() ? `?${searchParams.toString()}` : "");
-      posthog.capture("$pageview", { $current_url: url });
+      posthog.capture("$pageview", { url });
     }
   }, [pathname, searchParams]);
 
