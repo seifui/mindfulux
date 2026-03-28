@@ -37,7 +37,7 @@ export function PromoCard({
   if (variant === "community") {
     return (
       <div
-        className={`flex h-full flex-col rounded-promo shadow-promo overflow-hidden ${config.bg} ${config.paddingClass}`}
+        className={`flex h-full flex-col rounded-promo shadow-none overflow-hidden ${config.bg} ${config.paddingClass}`}
       >
         {/* Top row: title left, icon right */}
         <div className="flex items-start justify-between gap-4">
@@ -66,7 +66,7 @@ export function PromoCard({
 
   return (
     <div
-        className={`flex h-full flex-col rounded-promo shadow-promo overflow-visible ${config.bg} ${config.paddingClass}`}
+        className={`flex h-full flex-col rounded-promo shadow-none overflow-visible ${config.bg} ${config.paddingClass}`}
     >
       <div className="flex flex-1 flex-row items-center justify-between gap-6">
         <div className="flex min-w-0 flex-col gap-4">

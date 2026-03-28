@@ -35,7 +35,7 @@ export default function HomePage() {
       <Navbar />
       <main className="flex flex-1 flex-col pb-20">
         {/* 1. Hero + Search */}
-        <section className="flex flex-col items-center gap-8 pt-12 text-center md:gap-10 md:pt-16 lg:pt-20">
+        <section className="flex flex-col items-center gap-10 pt-16 text-center md:pt-20 lg:pt-28">
           {/* Figma: Secondary large — Clash Display Semibold 72px, lh 1, tracking -3px */}
           <h1 className="font-display font-semibold text-balance text-ink max-w-[min(100%,52rem)] text-[clamp(2rem,5.5vw+0.5rem,4.5rem)] leading-none tracking-[-3px] md:text-hero">
             <span className="block">
@@ -78,7 +78,7 @@ export default function HomePage() {
         </section>
 
         {/* 3. Featured skills */}
-        <section className="mt-20">
+        <section className="mt-28">
           <HorizontalScrollSection title="Featured skills">
             <PrincipleRow />
           </HorizontalScrollSection>

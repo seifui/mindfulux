@@ -9,7 +9,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    STATIC BRAND TOKENS
    Values that do not change between light and dark mode.
-   These generate Tailwind utility classes: rounded-card, shadow-book,
+   These generate Tailwind utility classes: rounded-card, shadow-book
    font-display, font-sinhala, etc.
 ───────────────────────────────────────────────────────────────────────────── */
 @theme {
@@ -22,7 +22,6 @@
 
   /* Box shadows */
   --shadow-book:  3.772px 9.429px 7.287px 0px rgba(1, 1, 1, 0.15); /* book mockup drop shadow */
-  --shadow-promo: 0 8px 24px 0 rgba(79, 64, 64, 0.10);             /* promo card ambient lift  */
 
   /* Sinhala: next/font Noto Sans Sinhala on <html> (--font-sinhala) */
 }
