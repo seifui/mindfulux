@@ -71,3 +71,13 @@ export function trackBookmarkToggled(slug: string, action: "add" | "remove") {
   if (!canTrack()) return;
   posthog.capture("bookmark_toggled", { slug, action });
 }
+
+export function trackBookNotifySubmitted(emailDomain: string) {
+  if (!canTrack()) return;
+  posthog.capture("book_notify_submitted", { email_domain: emailDomain });
+}
+
+export function trackBookEmailCtaClicked() {
+  if (!canTrack()) return;
+  posthog.capture("book_email_cta_clicked");
+}

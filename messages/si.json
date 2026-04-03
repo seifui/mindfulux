@@ -1,0 +1,47 @@
+{
+  "home": {
+    "promoBookTitle": "[SI] Book — launching soon",
+    "promoBookDescription": "[SI] Learn MindfulUX principles in depth with practical examples and exercises.",
+    "promoBookCta": "[SI] Get notified →",
+    "promoCommunityTitle": "[SI] Join to the Community!",
+    "promoCommunityDescription": "[SI] Connect with designers and share experiments, feedback, and resources.",
+    "promoCommunityCta": "[SI] Join now →"
+  },
+  "community": {
+    "headingLine1": "[SI] Join the Mindful UX Growth",
+    "headingLine2": "[SI] community with 10k+ members",
+    "namePlaceholder": "[SI] Your name",
+    "emailPlaceholder": "[SI] Your email",
+    "submit": "[SI] Join the Community"
+  },
+  "book": {
+    "badge": "[SI] LAUNCHING SOON",
+    "heroTitleBefore": "[SI] 150 ",
+    "heroTitleAccent": "[SI] UX Psychology",
+    "heroTitleAfter": "[SI] Principles — the book",
+    "subtitle": "[SI] A practical guide to the psychology behind great interfaces, written in both English and Sinhala for designers and engineers.",
+    "statUxPrinciples": "[SI] UX principles",
+    "statLanguages": "[SI] languages",
+    "statExamples": "[SI] real-world examples",
+    "statEmailLaunch": "[SI] email on launch",
+    "statEarlyAccess": "[SI] early access preview",
+    "coverTag": "[SI] LAUNCHING SOON",
+    "coverImageAlt": "[SI] 3D book cover: Designing for the Human Mind — 150 UX psychology principles",
+    "langEnglish": "[SI] English",
+    "langSinhala": "[SI] Sinhala",
+    "notifyHeading": "[SI] Interested in the book?",
+    "notifySubtext": "[SI] We'll send you one email the moment it goes live. No spam — just a launch notification.",
+    "emailPlaceholder": "[SI] Your email",
+    "notifyCta": "[SI] Notify me",
+    "successMessage": "[SI] You're on the list!",
+    "notifyDirectPrefix": "[SI] Or email us directly at",
+    "peekTitle": "[SI] A peek inside",
+    "peekCount": "[SI] 4 of 150 principles",
+    "lockedBadge": "[SI] In the book",
+    "teaserTitle": "[SI] More in the book",
+    "teaserDescription": "[SI] Deeper write-ups, examples, and exercises for every principle.",
+    "infoStrip": "[SI] 150 principles · English + Sinhala · For UX designers · For engineers · Real-world examples · Launching soon",
+    "validationEmail": "[SI] Please enter a valid email address.",
+    "notifyError": "[SI] Something went wrong. Please try again."
+  }
+}

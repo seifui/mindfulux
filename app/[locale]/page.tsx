@@ -4,6 +4,8 @@ import { PrincipleCard } from "@/components/features/PrincipleCard";
 import { PromoCard } from "@/components/features/PromoCard";
 import { CommunitySection } from "@/components/features/CommunitySection";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { getPrinciplesByLetter } from "@/lib/principles";
+import type { PublishedPrinciple } from "@/lib/principles";
 
 const PLACEHOLDER_DESC =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum...";
@@ -29,7 +31,29 @@ function PrincipleRow() {
   );
 }
 
-export default function HomePage() {
+function PrinciplesFromDB({ principles }: { principles: PublishedPrinciple[] }) {
+  return (
+    <>
+      {principles.map((p, i) => (
+        <PrincipleCard
+          key={p.id}
+          title={p.title}
+          description={p.description ?? ""}
+          slug={p.slug}
+          imageUrl={p.illustration_url ?? undefined}
+          position={i}
+        />
+      ))}
+    </>
+  );
+}
+
+export default async function HomePage() {
+  const [aPrinciples, bPrinciples] = await Promise.all([
+    getPrinciplesByLetter("A"),
+    getPrinciplesByLetter("B"),
+  ]);
+
   return (
     <div className="flex min-h-full flex-col">
       <Navbar />
@@ -55,23 +79,11 @@ export default function HomePage() {
         <section className="mt-20">
           <div className="-mx-6 px-6 md:mx-0 md:px-0">
             <div className="flex flex-row flex-nowrap items-stretch gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none md:gap-6 md:overflow-visible">
-              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 h-full">
-                <PromoCard
-                  variant="book"
-                  title="Book is out now!"
-                  description="Learn MindfulUX principles in depth with practical examples and exercises."
-                  ctaLabel="Buy now →"
-                  ctaHref="/book"
-                />
+              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
+                <PromoCard variant="book" ctaHref="/book" />
               </div>
-              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 h-full">
-                <PromoCard
-                  variant="community"
-                  title="Join to the Community!"
-                  description="Connect with designers and share experiments, feedback, and resources."
-                  ctaLabel="Join now →"
-                  ctaHref="/community"
-                />
+              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
+                <PromoCard variant="community" ctaHref="/community" />
               </div>
             </div>
           </div>
@@ -85,16 +97,20 @@ export default function HomePage() {
         </section>
 
         {/* 4–6. Principle sections */}
-        <section className="mt-20">
-          <HorizontalScrollSection title="Section 1 title">
-            <PrincipleRow />
-          </HorizontalScrollSection>
-        </section>
-        <section className="mt-20">
-          <HorizontalScrollSection title="Section 2 title">
-            <PrincipleRow />
-          </HorizontalScrollSection>
-        </section>
+        {aPrinciples.length > 0 && (
+          <section className="mt-20">
+            <HorizontalScrollSection title="A Principles">
+              <PrinciplesFromDB principles={aPrinciples} />
+            </HorizontalScrollSection>
+          </section>
+        )}
+        {bPrinciples.length > 0 && (
+          <section className="mt-20">
+            <HorizontalScrollSection title="B Principles">
+              <PrinciplesFromDB principles={bPrinciples} />
+            </HorizontalScrollSection>
+          </section>
+        )}
         <section className="mt-20">
           <HorizontalScrollSection title="Section 3 title">
             <PrincipleRow />

@@ -1,11 +1,19 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import { NewsletterForm } from "@/components/features/NewsletterForm";
 
 export function CommunitySection() {
+  const t = useTranslations("community");
+
   return (
-    <section className="w-full py-16 md:py-20">
+    <section id="community" className="w-full scroll-mt-24 py-16 md:py-20">
       <div className="mx-auto flex max-w-page flex-col items-center gap-[35px] px-6">
-        <h2 className="font-display font-semibold text-[36px] text-ink text-center leading-none">
-          Join the Mindful UX Growth community with 10k+ members
+        <h2 className="max-w-full text-center font-display text-[36px] font-semibold leading-none text-ink">
+          {t("headingLine1")}
+          <br />
+          {t("headingLine2")}
         </h2>
         <NewsletterForm />
       </div>

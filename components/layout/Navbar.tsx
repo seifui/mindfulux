@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/principles", label: "Principles" },
   { href: "/#community", label: "Community" },
-  { href: "/#book", label: "Book" },
+  { href: "/book", label: "Book" },
 ] as const;
 
 function LogoMark() {
@@ -110,7 +110,12 @@ function MainNavLinks({
         const isActive =
           item.href === "/"
             ? pathname === "/"
-            : pathname === item.href || pathname.startsWith(item.href + "/");
+            : item.href === "/book"
+              ? pathname === "/book"
+              : item.href.startsWith("/#")
+                ? false
+                : pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
 
         return (
           <Link
@@ -131,20 +136,11 @@ function MainNavLinks({
 }
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    setTheme(
-      document.documentElement.classList.contains("dark") ? "dark" : "light"
-    );
-  }, []);
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const toggleTheme = () => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      document.documentElement.classList.toggle("dark", next === "dark");
-      return next;
-    });
+    setTheme(isDark ? "light" : "dark");
   };
 
   return (
@@ -153,7 +149,7 @@ function ThemeToggle() {
       onClick={toggleTheme}
       className="cursor-pointer border-0 bg-transparent p-0"
       aria-label={
-        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        isDark ? "Switch to light mode" : "Switch to dark mode"
       }
     >
       <svg
@@ -170,7 +166,7 @@ function ThemeToggle() {
           fillOpacity="0.14"
         />
         <g clipPath="url(#clip0_4566_1431)">
-          {theme === "dark" ? (
+          {isDark ? (
             <g transform="translate(10 10) scale(0.8333333333333334)">
               <path
                 d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
@@ -211,7 +207,7 @@ export function Navbar() {
 
   return (
     <nav
-      className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip bg-cream flex w-full items-center justify-between gap-4 px-6 py-4 md:gap-8 md:py-5 lg:px-10"
+      className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip bg-background flex w-full items-center justify-between gap-4 px-6 py-4 md:gap-8 md:py-5 lg:px-10"
       aria-label="Primary"
     >
       <Link
@@ -219,7 +215,7 @@ export function Navbar() {
         className="flex min-w-0 shrink-0 items-center gap-2 md:gap-3"
       >
         <LogoMark />
-        <span className="whitespace-nowrap font-display font-semibold text-[clamp(1.1rem,4vw,1.806rem)] leading-none tracking-[-0.03em] text-brand-dark">
+        <span className="whitespace-nowrap font-display font-semibold text-[clamp(1.1rem,4vw,1.806rem)] leading-none tracking-[-0.03em] text-foreground">
           MindfulUX Growth
         </span>
       </Link>
@@ -242,7 +238,7 @@ export function Navbar() {
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-cream border-border-subtle w-[min(100%,320px)]">
+            <SheetContent side="right" className="bg-background border-border-subtle w-[min(100%,320px)]">
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation</SheetTitle>
               </SheetHeader>

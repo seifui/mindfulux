@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 import { PostHogProvider } from "posthog-js/react";
 import posthog from "@/lib/posthog";
 
@@ -23,11 +24,13 @@ function PageViewTracker() {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <PostHogProvider client={posthog}>
-      <Suspense fallback={null}>
-        <PageViewTracker />
-      </Suspense>
-      {children}
-    </PostHogProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <PostHogProvider client={posthog}>
+        <Suspense fallback={null}>
+          <PageViewTracker />
+        </Suspense>
+        {children}
+      </PostHogProvider>
+    </ThemeProvider>
   );
 }

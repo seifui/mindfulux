@@ -1,9 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+
 import { Input } from "@/components/ui/input";
 
 export function NewsletterForm() {
+  const t = useTranslations("community");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -20,7 +23,7 @@ export function NewsletterForm() {
       <div className="flex flex-col gap-3">
         <Input
           type="text"
-          placeholder="Your name"
+          placeholder={t("namePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           autoComplete="given-name"
@@ -31,7 +34,7 @@ export function NewsletterForm() {
         />
         <Input
           type="email"
-          placeholder="Your email"
+          placeholder={t("emailPlaceholder")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
@@ -47,7 +50,7 @@ export function NewsletterForm() {
                    text-base font-semibold text-white
                    transition-opacity duration-150 hover:opacity-90"
       >
-        Join the Community
+        {t("submit")}
       </button>
     </form>
   );

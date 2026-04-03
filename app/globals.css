@@ -17,6 +17,7 @@
   --radius-card:  0.75rem;  /* 12px — general UI cards                             */
   --radius-skill: 1rem;     /* 16px — Featured skills cards (Figma node 4578-1598)  */
   --radius-skill-well: 0.75rem; /* 12px — illustration inset                         */
+  --radius-illustration: 1.25rem; /* 20px — principle detail hero frame (Figma 4648:2484) */
   --radius-promo: 2.5rem;   /* 40px — Book & Community promo cards (Figma node 4573-1596) */
   --radius-pill:  9999px;   /* pill — search bar, newsletter inputs, icon buttons  */
 
@@ -81,7 +82,7 @@
   /* Font slots — --font-body from next/font Inter on <html> */
   --font-sans:    var(--font-body);
   --font-mono:    var(--font-geist-mono);
-  --font-heading: var(--font-body);
+  --font-heading: var(--font-display);
 
   /* ── MindfulUX brand color tokens ─────────────────────────────────────────
      Named tokens from the Figma variable library and inline design values.
@@ -95,6 +96,7 @@
   --color-featured-strip: var(--featured-strip); /* Featured skills section band (#f2ece4)        */
   --color-skill-card:  var(--skill-card);  /* principle card surface (#e8e0d5)                    */
   --color-skill-well:  var(--skill-well);  /* illustration inset (warm off-white)                  */
+  --color-principle-detail-hero-well: var(--principle-detail-hero-well); /* principle detail hero vs page cream (Figma) */
   --color-card-fill:   var(--card-fill);   /* rgba(182,137,115,0.14) — legacy skill tint          */
   --color-input-fill:  var(--input-fill);  /* rgba(31,53,97,0.04) — search + newsletter input bg  */
 
@@ -110,6 +112,9 @@
   /* Borders */
   --color-border-subtle: var(--border-subtle); /* rgba(31,53,97,0.16) — card/button edges          */
   --color-border-strong: var(--border-strong); /* rgba(0,13,33,0.8)  — pill button outlines        */
+
+  /* Book launching page — Figma node 4671:2397 (bg-white-2 stat pills & surfaces) */
+  --color-book-surface: var(--book-surface);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -190,6 +195,11 @@
   --featured-strip: #f2ece4;
   --skill-card: #e8e0d5;
   --skill-well: #faf8f5;
+  /* Slightly deeper than page cream (#eee8e1) — hero illustration mat (Figma ~#EBE3D9) */
+  --principle-detail-hero-well: #ebe3d9;
+
+  /* Figma Colors/Background/bg-white-2 — book stat pills, language chips, notify card surface */
+  --book-surface: #faf7f4;
 
   /* --font-body / --font-display / --font-sinhala come from next/font on <html> (layout.tsx). */
 }
@@ -265,6 +275,17 @@
   --featured-strip: #242220;
   --skill-card: #2a2622;
   --skill-well: #1f1c18;
+  --principle-detail-hero-well: #2a2622;
+
+  --book-surface: #2a2622;
+}
+
+/* Tan/lavender promo surfaces stay light in dark mode — use :root ink/muted/border values here */
+.dark .promo-card-light-surface {
+  --ink: rgba(24, 28, 32, 0.9);
+  --ink-secondary: rgba(0, 13, 33, 0.8);
+  --muted-text: rgba(6, 26, 64, 0.6);
+  --border-strong: rgba(0, 13, 33, 0.8);
 }
 
 @layer base {
@@ -285,4 +306,19 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Book cover — Figma motion spec: translateY 0→-8px, 4s infinite ease-in-out */
+@keyframes book-cover-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@utility animate-book-cover-float {
+  animation: book-cover-float 4s ease-in-out infinite;
 }
