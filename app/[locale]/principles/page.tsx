@@ -3,133 +3,71 @@ import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { PrinciplesFilter } from "@/components/features/PrinciplesFilter";
 import { PrinciplesGrid } from "@/components/features/PrinciplesGrid";
+import { getSupabaseClient } from "@/lib/supabase";
 
-// ── Mock data ────────────────────────────────────────────────────────────────
+// ── Supabase listing row ─────────────────────────────────────────────────────
 
-const PLACEHOLDER_DESC =
-  "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard dummy text ever since the 1500s.";
-
-interface Principle {
+type PrincipleRow = {
+  id: string;
+  slug: string;
   title: string;
-  category: string;
-  description: string;
+  description: string | null;
+  illustration_url: string | null;
+  category: string | null;
+  created_at: string;
+};
+
+async function fetchPublishedPrinciples(): Promise<PrincipleRow[]> {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from("principles")
+    .select(
+      "id, slug, title, description, illustration_url, category, created_at",
+    )
+    .eq("published", true)
+    .order("title", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return (data ?? []) as PrincipleRow[];
 }
 
-const ALL_PRINCIPLES: Principle[] = [
-  {
-    title: "Centre-Stage Effect",
-    category: "Psychology",
-    description:
-      "Items placed in the centre of a set are more likely to be chosen. Users gravitate toward middle options, making placement a powerful tool for guiding decisions without explicit direction.",
-  },
-  {
-    title: "Chronoception",
-    category: "Perception",
-    description:
-      "Time perception can be manipulated through design. Engaging interactions make waits feel shorter, while empty loading states amplify impatience. Design that respects perceived time builds trust.",
-  },
-  {
-    title: "Chunking",
-    category: "Memory",
-    description:
-      "Grouping individual pieces of information into larger meaningful units significantly improves recall and reduces cognitive load. Phone numbers and progress steps are classic applications.",
-  },
-  {
-    title: "Cognitive Tax",
-    category: "Cognitive",
-    description:
-      "Every design decision imposes a mental cost on the user. Unnecessary steps, unclear labels, and dense layouts drain attention. Reducing cognitive tax is the foundation of mindful design.",
-  },
-  {
-    title: "Von Restorff Effect",
-    category: "Attention",
-    description:
-      "Among similar items, the one that differs most from the rest is most likely to be remembered. Highlighting a primary action or a key piece of content leverages this isolation effect.",
-  },
-  {
-    title: "Hick's Law",
-    category: "Design",
-    description:
-      "The time it takes to make a decision grows logarithmically with the number of choices available. Reducing options at critical moments speeds up decisions and lowers abandonment.",
-  },
-  {
-    title: "Serial Position Effect",
-    category: "Memory",
-    description:
-      "Users best remember items at the beginning (primacy) and end (recency) of a list. Place the most important actions and information in these positions for maximum recall.",
-  },
-  {
-    title: "Social Proof",
-    category: "Social",
-    description:
-      "People look to the actions and opinions of others to determine correct behaviour in ambiguous situations. Ratings, reviews, and user counts all leverage this deeply human tendency.",
-  },
-  {
-    title: "Zeigarnik Effect",
-    category: "Psychology",
-    description:
-      "People remember uncompleted tasks better than completed ones. Progress indicators, streaks, and open loops exploit this tendency to keep users engaged and motivated to finish.",
-  },
-  {
-    title: "Fitts's Law",
-    category: "Design",
-    description:
-      "The time to acquire a target is a function of the distance to and size of the target. Larger, closer interactive elements are faster to reach — a critical principle for touch and pointer interfaces.",
-  },
-  {
-    title: "Loss Aversion",
-    category: "Psychology",
-    description:
-      "People feel the pain of losing something roughly twice as strongly as the pleasure of gaining an equivalent thing. Framing features around what users stand to lose drives stronger action than highlighting gains.",
-  },
-  {
-    title: "Peak-End Rule",
-    category: "Perception",
-    description:
-      "People judge an experience primarily by its most intense moment and how it ended, rather than the sum of every moment. Designing memorable peaks and satisfying endings shapes lasting impressions.",
-  },
-  {
-    title: "Aesthetic-Usability Effect",
-    category: "Cognitive",
-    description:
-      "Users perceive visually attractive interfaces as more usable, even when they are not. A polished aesthetic creates goodwill that increases tolerance for minor usability issues.",
-  },
-  {
-    title: "Miller's Law",
-    category: "Memory",
-    description:
-      "The average person can hold about seven items (plus or minus two) in working memory at once. Designing within this limit prevents overwhelm and helps users process information efficiently.",
-  },
-];
-
-const CATEGORIES = [
-  "All",
-  "Psychology",
-  "Cognitive",
-  "Perception",
-  "Memory",
-  "Attention",
-  "Design",
-  "Social",
-];
+function buildCategories(principles: PrincipleRow[]): string[] {
+  const labels = new Set<string>();
+  for (const p of principles) {
+    const c = p.category?.trim();
+    if (c) labels.add(c);
+  }
+  return ["All", ...Array.from(labels).sort((a, b) => a.localeCompare(b))];
+}
 
 // ── Filtering + sorting (server-side) ────────────────────────────────────────
 
-function getFilteredPrinciples(category?: string, sort?: string): Principle[] {
-  let results = [...ALL_PRINCIPLES];
+function getFilteredPrinciples(
+  principles: PrincipleRow[],
+  category?: string,
+  sort?: string,
+): PrincipleRow[] {
+  let results = [...principles];
 
   if (category && category !== "all") {
     results = results.filter(
-      (p) => p.category.toLowerCase() === category.toLowerCase(),
+      (p) => (p.category ?? "").toLowerCase() === category.toLowerCase(),
     );
   }
 
   if (sort === "a-z") {
     results.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sort === "newest") {
-    results.reverse();
+    results.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
   }
-  // "popular" (default): original order
+  // "popular" (default): title order from fetch
 
   return results;
 }
@@ -160,7 +98,9 @@ export default async function PrinciplesPage({
 }) {
   const { category, sort } = await searchParams;
 
-  const principles = getFilteredPrinciples(category, sort);
+  const allPrinciples = await fetchPublishedPrinciples();
+  const categories = buildCategories(allPrinciples);
+  const principles = getFilteredPrinciples(allPrinciples, category, sort);
 
   return (
     <div className="flex min-h-full flex-col">
@@ -177,7 +117,7 @@ export default async function PrinciplesPage({
         {/* Filter + sort bar */}
         <div className="mb-8">
           <Suspense fallback={<FilterSkeleton />}>
-            <PrinciplesFilter categories={CATEGORIES} />
+            <PrinciplesFilter categories={categories} />
           </Suspense>
         </div>
 

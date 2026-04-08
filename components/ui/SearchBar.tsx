@@ -63,7 +63,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       className="relative mx-auto w-full max-w-[586px] px-4 md:px-0"
     >
       <div
-        className="relative h-[60px] w-full rounded-[30px] bg-[rgba(31,53,97,0.04)]"
+        className="relative h-[60px] w-full rounded-[30px] bg-input-fill"
         role="search"
       >
         <input
@@ -90,17 +90,17 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           aria-expanded={showDropdown}
           aria-haspopup="listbox"
           autoComplete="off"
-          className="font-sans absolute inset-y-0 left-0 right-0 z-0 h-full w-full rounded-[30px] border-0 bg-transparent pl-6 pr-[50px] text-base text-[#061A40] outline-none ring-0 placeholder:text-[rgba(6,26,64,0.6)] focus:border-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
+          className="font-sans absolute inset-y-0 left-0 right-0 z-0 h-full w-full rounded-[30px] border-0 bg-transparent pl-6 pr-[50px] text-base text-foreground outline-none ring-0 placeholder:text-muted-foreground focus:border-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
         />
         <button
           type="button"
           aria-label="Submit search"
           onClick={submit}
-          className="absolute right-[10px] top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#B68973] p-0 transition-opacity hover:opacity-90"
+          className="absolute right-[10px] top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary p-0 transition-opacity hover:opacity-90"
         >
           {isLoading ? (
             <Loader2
-              className="animate-spin text-white"
+              className="animate-spin text-foreground"
               width={20}
               height={20}
               aria-hidden
@@ -112,11 +112,12 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               viewBox="534 10 40 40"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="text-foreground"
               aria-hidden
             >
               <path
                 d="M560 36L557.667 33.6667M559.333 29.6667C559.333 32.7963 556.796 35.3333 553.667 35.3333C550.537 35.3333 548 32.7963 548 29.6667C548 26.5371 550.537 24 553.667 24C556.796 24 559.333 26.5371 559.333 29.6667Z"
-                stroke="white"
+                stroke="currentColor"
                 strokeWidth="1.66667"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -131,21 +132,21 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         <div
           role="listbox"
           aria-label="Search results"
-          className="absolute left-0 right-0 top-[68px] z-50 overflow-hidden rounded-2xl border border-[rgba(6,26,64,0.08)] bg-white shadow-lg"
+          className="absolute left-0 right-0 top-[68px] z-50 overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg"
         >
           {results.length > 0 ? (
-            <ul className="divide-y divide-[rgba(6,26,64,0.06)]">
+            <ul className="divide-y divide-border">
               {results.map((result) => (
                 <li key={result.id} role="option" aria-selected={false}>
                   <button
                     type="button"
                     onClick={() => handleSelect(result)}
-                    className="flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition-colors hover:bg-[rgba(31,53,97,0.04)]"
+                    className="flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition-colors hover:bg-muted"
                   >
-                    <span className="font-sans text-sm font-semibold text-[#061A40] line-clamp-1">
+                    <span className="font-sans text-sm font-semibold text-foreground line-clamp-1">
                       {result.title}
                     </span>
-                    <span className="shrink-0 rounded-full bg-[rgba(31,53,97,0.06)] px-3 py-1 font-sans text-xs font-semibold text-[#061A40]/60">
+                    <span className="shrink-0 rounded-full bg-muted px-3 py-1 font-sans text-xs font-semibold text-muted-foreground">
                       {result.category}
                     </span>
                   </button>
@@ -154,7 +155,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             </ul>
           ) : (
             !isLoading && (
-              <p className="px-5 py-4 font-sans text-sm text-[rgba(6,26,64,0.5)]">
+              <p className="px-5 py-4 font-sans text-sm text-muted-foreground">
                 No principles found for &ldquo;{value.trim()}&rdquo;
               </p>
             )

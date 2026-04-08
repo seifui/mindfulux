@@ -36,7 +36,7 @@ export function PrincipleCard({
   const card = (
     <article
       className={cn(
-        "flex w-[297px] shrink-0 snap-start flex-col gap-5 rounded-card bg-card-fill p-6 transition-shadow",
+        "flex h-full w-[297px] shrink-0 snap-start flex-col gap-5 rounded-card bg-card-fill p-6 transition-shadow",
         asLink && "cursor-pointer hover:shadow-promo",
         className
       )}
@@ -63,13 +63,13 @@ export function PrincipleCard({
   );
 
   if (!asLink) {
-    return <div className="block">{card}</div>;
+    return <div className="block h-full">{card}</div>;
   }
 
   return (
     <Link
       href={linkHref ?? `/principles/${slug}`}
-      className="block"
+      className="block h-full"
       onClick={() => trackPrincipleCardClicked(slug, position, section)}
     >
       {card}
