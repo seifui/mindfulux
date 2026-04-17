@@ -100,7 +100,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         >
           {isLoading ? (
             <Loader2
-              className="animate-spin text-foreground"
+              className="animate-spin text-white"
               width={20}
               height={20}
               aria-hidden
@@ -112,7 +112,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               viewBox="534 10 40 40"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="text-foreground"
+              className="text-white"
               aria-hidden
             >
               <path

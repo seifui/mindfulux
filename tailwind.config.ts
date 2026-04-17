@@ -138,8 +138,6 @@ const config = {
 
       // ── Shadows ─────────────────────────────────────────────────────────────
       boxShadow: {
-        // Book mockup drop shadow (Shadow node inside Book Mockup frame)
-        book: "3.772px 9.429px 7.287px 0px rgba(1, 1, 1, 0.15)",
         // Promo card ambient lift (inferred from design description)
         promo: "0 8px 24px 0 rgba(79, 64, 64, 0.10)",
       },

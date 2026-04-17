@@ -19,7 +19,6 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/principles", label: "Principles" },
   { href: "/#community", label: "Community" },
-  { href: "/book", label: "Book" },
 ] as const;
 
 function LogoMark() {
@@ -110,12 +109,10 @@ function MainNavLinks({
         const isActive =
           item.href === "/"
             ? pathname === "/"
-            : item.href === "/book"
-              ? pathname === "/book"
-              : item.href.startsWith("/#")
-                ? false
-                : pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
+            : item.href.startsWith("/#")
+              ? false
+              : pathname === item.href ||
+                pathname.startsWith(item.href + "/");
 
         return (
           <Link
@@ -124,7 +121,8 @@ function MainNavLinks({
             onClick={onNavigate}
             className={cn(
               "font-sans text-base font-medium text-ink transition-colors hover:text-accent-brand",
-              isActive && "text-accent-brand"
+              isActive && "text-accent-brand",
+              item.label === "Community" && "hidden"
             )}
           >
             {item.label}

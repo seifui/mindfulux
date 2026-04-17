@@ -5,10 +5,9 @@ import { useTranslations } from "next-intl";
 import { BookIllustration } from "@/components/ui/BookIllustration";
 import { Link } from "@/i18n/navigation";
 
-interface PromoCardProps {
-  variant: "book" | "community";
-  ctaHref: string;
-}
+type PromoCardProps =
+  | { variant: "book" }
+  | { variant: "community"; ctaHref: string };
 
 const variantConfig = {
   book: {
@@ -27,8 +26,9 @@ const variantConfig = {
 
 const promoSurfaceClass = "promo-card-light-surface";
 
-export function PromoCard({ variant, ctaHref }: PromoCardProps) {
+export function PromoCard(props: PromoCardProps) {
   const t = useTranslations("home");
+  const variant = props.variant;
   const config = variantConfig[variant];
 
   const title =
@@ -37,10 +37,10 @@ export function PromoCard({ variant, ctaHref }: PromoCardProps) {
     variant === "book"
       ? t("promoBookDescription")
       : t("promoCommunityDescription");
-  const ctaLabel =
-    variant === "book" ? t("promoBookCta") : t("promoCommunityCta");
 
   if (variant === "community") {
+    const { ctaHref } = props;
+    const ctaLabel = t("promoCommunityCta");
     return (
       <div
         className={`${promoSurfaceClass} flex h-full flex-col rounded-promo shadow-none overflow-hidden ${config.bg} ${config.paddingClass}`}
@@ -103,12 +103,6 @@ export function PromoCard({ variant, ctaHref }: PromoCardProps) {
           <p className="text-sm font-medium leading-[1.5] tracking-[-0.28px] text-muted-text">
             {description}
           </p>
-          <Link
-            href={ctaHref}
-            className="mt-1 inline-flex w-fit items-center rounded-pill border border-border-strong px-4 py-1.5 text-sm font-semibold text-ink-secondary transition-colors hover:bg-border-strong/10"
-          >
-            {ctaLabel}
-          </Link>
         </div>
         <BookIllustration className="shrink-0 self-center" />
       </div>

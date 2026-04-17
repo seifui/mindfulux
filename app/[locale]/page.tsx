@@ -4,7 +4,7 @@ import { PrincipleCard } from "@/components/features/PrincipleCard";
 import { PromoCard } from "@/components/features/PromoCard";
 import { CommunitySection } from "@/components/features/CommunitySection";
 import { SearchBar } from "@/components/ui/SearchBar";
-import { getPrinciplesByLetter } from "@/lib/principles";
+import { getPrinciplesForHomeSection } from "@/lib/principles";
 import type { PublishedPrinciple } from "@/lib/principles";
 
 const PLACEHOLDER_DESC =
@@ -49,9 +49,10 @@ function PrinciplesFromDB({ principles }: { principles: PublishedPrinciple[] }) 
 }
 
 export default async function HomePage() {
-  const [aPrinciples, bPrinciples] = await Promise.all([
-    getPrinciplesByLetter("A"),
-    getPrinciplesByLetter("B"),
+  const [aPrinciples, bPrinciples, cPrinciples] = await Promise.all([
+    getPrinciplesForHomeSection("a"),
+    getPrinciplesForHomeSection("b"),
+    getPrinciplesForHomeSection("c"),
   ]);
 
   return (
@@ -80,7 +81,7 @@ export default async function HomePage() {
           <div className="-mx-6 px-6 md:mx-0 md:px-0">
             <div className="flex flex-row flex-nowrap items-stretch gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none md:gap-6 md:overflow-visible">
               <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
-                <PromoCard variant="book" ctaHref="/book" />
+                <PromoCard variant="book" />
               </div>
               <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
                 <PromoCard variant="community" ctaHref="/community" />
@@ -111,11 +112,13 @@ export default async function HomePage() {
             </HorizontalScrollSection>
           </section>
         )}
-        <section className="mt-20">
-          <HorizontalScrollSection title="Section 3 title">
-            <PrincipleRow />
-          </HorizontalScrollSection>
-        </section>
+        {cPrinciples.length > 0 && (
+          <section className="mt-20">
+            <HorizontalScrollSection title="C Principles">
+              <PrinciplesFromDB principles={cPrinciples} />
+            </HorizontalScrollSection>
+          </section>
+        )}
 
         <section className="mt-20">
           <CommunitySection />

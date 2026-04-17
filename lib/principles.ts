@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseClient } from "@/lib/supabase";
 
 export type PublishedPrinciple = {
   id: string;
@@ -84,17 +85,20 @@ export async function getPrincipleDetail(
   return data as PrincipleDetail;
 }
 
-export async function getPrinciplesByLetter(
-  letter: string
+/** Homepage A/B/C carousels — driven by `principles.home_section`, not title prefix. */
+export type HomeSection = "a" | "b" | "c";
+
+export async function getPrinciplesForHomeSection(
+  section: HomeSection,
 ): Promise<PublishedPrinciple[]> {
-  const supabase = getSupabaseAdmin();
-  if (!supabase) return [];
+  /** Public read matches `/principles`; RLS allows select. Avoids requiring service role on the homepage. */
+  const supabase = getSupabaseClient();
 
   const { data, error } = await supabase
     .from("principles")
     .select("id, slug, title, description, illustration_url")
     .eq("published", true)
-    .ilike("title", `${letter}%`)
+    .eq("home_section", section)
     .order("title", { ascending: true });
 
   if (error || !data?.length) return [];

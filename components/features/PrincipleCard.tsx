@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
+import { getImageUrl } from "@/lib/cloudflare-images";
 import { cn } from "@/lib/utils";
 import { trackPrincipleCardClicked } from "@/lib/analytics";
 
@@ -31,7 +32,7 @@ export function PrincipleCard({
   linkHref,
 }: PrincipleCardProps) {
   const slug = slugProp ?? title.toLowerCase().replace(/\s+/g, "-");
-  const src = imageUrl ?? "/illustrations/centre-stage-effect.png";
+  const src = getImageUrl(imageUrl);
 
   const card = (
     <article

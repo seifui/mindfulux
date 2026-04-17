@@ -3,10 +3,14 @@ import Image, { type StaticImageData } from "next/image";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { PrincipleViewTracker } from "@/components/features/PrincipleViewTracker";
+import { getImageUrl } from "@/lib/cloudflare-images";
 import { getPrincipleDetail } from "@/lib/principles";
 import { BackButton } from "./BackButton";
 
 import defaultPrincipleHero from "../../../../public/illustrations/centre-stage-effect-detail.png";
+
+const DETAIL_HERO_FALLBACK_PATH =
+  "/illustrations/centre-stage-effect-detail.png";
 
 /** DB often returns "" instead of null; `??` does not fall back for empty string. */
 function principleHeroSrc(
@@ -14,7 +18,7 @@ function principleHeroSrc(
 ): string | StaticImageData {
   const t = illustrationUrl?.trim();
   if (!t || t.toLowerCase() === "null") return defaultPrincipleHero;
-  return t;
+  return getImageUrl(t, { fallback: DETAIL_HERO_FALLBACK_PATH });
 }
 
 // ── Content helpers ────────────────────────────────────────────────────────────

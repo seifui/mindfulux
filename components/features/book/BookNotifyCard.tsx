@@ -56,16 +56,12 @@ export function BookNotifyCard() {
   }
 
   return (
-    <div className="relative w-full max-w-[540px] overflow-hidden rounded-3xl bg-book-surface px-2 pb-10 pt-px md:px-[7px] md:pb-[42px] md:pt-px">
-      <div
-        className="pointer-events-none absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-accent-brand to-lavender"
-        aria-hidden
-      />
-      <div className="flex flex-col items-center gap-4 pt-8 md:gap-[17px] md:pt-10">
+    <div className="w-full max-w-[680px] overflow-hidden rounded-3xl bg-card-fill px-[7px] pb-10 pt-10 md:pb-[42px]">
+      <div className="flex flex-col items-center gap-4 md:gap-[17px]">
         <h2 className="w-full text-center text-2xl font-semibold leading-8 tracking-[-0.48px] text-ink">
           {t("notifyHeading")}
         </h2>
-        <p className="max-w-md text-center text-lg font-medium leading-7 tracking-[-0.36px] text-accent-brand">
+        <p className="max-w-md whitespace-pre-line text-center text-lg font-medium leading-7 tracking-[-0.36px] text-accent-brand">
           {t("notifySubtext")}
         </p>
 
@@ -79,7 +75,7 @@ export function BookNotifyCard() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-6"
+            className="flex w-full flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-[25px]"
           >
             <Input
               type="email"
@@ -94,7 +90,7 @@ export function BookNotifyCard() {
             <Button
               type="submit"
               disabled={pending}
-              className="h-12 shrink-0 rounded-lg bg-accent-brand px-5 text-sm font-semibold text-white hover:bg-accent-brand/90"
+              className="h-12 shrink-0 rounded-pill bg-accent-brand px-5 text-sm font-semibold text-white hover:bg-accent-brand/90"
             >
               {t("notifyCta")}
             </Button>
