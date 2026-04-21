@@ -1,9 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { MouseEvent } from "react";
 
 import { BookIllustration } from "@/components/ui/BookIllustration";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
 type PromoCardProps =
   | { variant: "book" }
@@ -26,8 +27,18 @@ const variantConfig = {
 
 const promoSurfaceClass = "promo-card-light-surface";
 
+function scrollToCommunitySection() {
+  document.getElementById("community")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+  const { pathname, search } = window.location;
+  window.history.replaceState(null, "", `${pathname}${search}#community`);
+}
+
 export function PromoCard(props: PromoCardProps) {
   const t = useTranslations("home");
+  const pathname = usePathname();
   const variant = props.variant;
   const config = variantConfig[variant];
 
@@ -41,6 +52,11 @@ export function PromoCard(props: PromoCardProps) {
   if (variant === "community") {
     const { ctaHref } = props;
     const ctaLabel = t("promoCommunityCta");
+    const handleCommunityCtaClick = (e: MouseEvent<HTMLAnchorElement>) => {
+      if (pathname !== "/") return;
+      e.preventDefault();
+      scrollToCommunitySection();
+    };
     return (
       <div
         className={`${promoSurfaceClass} flex h-full flex-col rounded-promo shadow-none overflow-hidden ${config.bg} ${config.paddingClass}`}
@@ -74,6 +90,7 @@ export function PromoCard(props: PromoCardProps) {
           </p>
           <Link
             href={ctaHref}
+            onClick={handleCommunityCtaClick}
             className="mt-1 inline-flex w-fit items-center rounded-pill border border-border-strong px-4 py-1.5 text-sm font-semibold text-ink-secondary transition-colors hover:bg-border-strong/10"
           >
             {ctaLabel}
@@ -87,24 +104,16 @@ export function PromoCard(props: PromoCardProps) {
     <div
       className={`${promoSurfaceClass} flex h-full flex-col rounded-promo shadow-none overflow-visible ${config.bg} ${config.paddingClass}`}
     >
-      <div className="flex flex-1 flex-row items-center justify-between gap-6">
+      <div className="flex flex-1 flex-row items-start justify-between gap-6">
         <div className="flex min-w-0 flex-col gap-4">
           <h3 className={config.headingClass}>
-            {variant === "book" ? (
-              <>
-                Book — launching
-                <br />
-                soon
-              </>
-            ) : (
-              title
-            )}
+            {title}
           </h3>
           <p className="text-sm font-medium leading-[1.5] tracking-[-0.28px] text-muted-text">
             {description}
           </p>
         </div>
-        <BookIllustration className="shrink-0 self-center" />
+        <BookIllustration className="shrink-0" />
       </div>
     </div>
   );

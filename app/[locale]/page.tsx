@@ -84,7 +84,7 @@ export default async function HomePage() {
                 <PromoCard variant="book" />
               </div>
               <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
-                <PromoCard variant="community" ctaHref="/community" />
+                <PromoCard variant="community" ctaHref="/#community" />
               </div>
             </div>
           </div>
