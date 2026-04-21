@@ -37,12 +37,12 @@ export function PrincipleCard({
   const card = (
     <article
       className={cn(
-        "flex h-full w-[297px] shrink-0 snap-start flex-col gap-5 rounded-card bg-card-fill p-6 transition-shadow",
+        "flex flex-col h-[320px] w-[297px] shrink-0 snap-start gap-5 rounded-card bg-card-fill p-6 transition-shadow",
         asLink && "cursor-pointer hover:shadow-promo",
         className
       )}
     >
-      <div className="relative aspect-[2/1] w-full overflow-hidden rounded-card bg-principle-detail-hero-well">
+      <div className="relative aspect-[2/1] w-full shrink-0 overflow-hidden rounded-card bg-principle-detail-hero-well">
         <Image
           src={src}
           alt={title}
@@ -52,11 +52,11 @@ export function PrincipleCard({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-display text-[24px] font-semibold leading-[1.3] text-ink">
+      <div className="flex min-h-0 flex-1 flex-col gap-2">
+        <h3 className="min-h-[56px] font-display text-[24px] font-semibold leading-[1.3] text-ink">
           {title}
         </h3>
-        <p className="font-sans text-sm font-medium leading-[20px] tracking-[-0.28px] text-ink line-clamp-3">
+        <p className="min-h-0 flex-1 font-sans text-sm font-medium leading-[20px] tracking-[-0.28px] text-ink line-clamp-3">
           {description}
         </p>
       </div>

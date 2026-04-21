@@ -12,7 +12,7 @@ import { captureBookPageViewed } from "@/lib/posthog-server";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Book — launching soon · MindfulUX Growth",
+    title: "Book Launching soon! · MindfulUX Growth",
     description:
       "150 UX psychology principles in one book — English and Sinhala. Launching soon.",
   };
