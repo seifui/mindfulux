@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+scripts/seeds/.tmp-render/
 *.pem
 
 # debug

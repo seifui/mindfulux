@@ -1,35 +1,16 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { HorizontalScrollSection } from "@/components/features/HorizontalScrollSection";
+import { LockedSection } from "@/components/features/LockedSection";
 import { PrincipleCard } from "@/components/features/PrincipleCard";
 import { PromoCard } from "@/components/features/PromoCard";
 import { CommunitySection } from "@/components/features/CommunitySection";
 import { SearchBar } from "@/components/ui/SearchBar";
-import { getPrinciplesForHomeSection } from "@/lib/principles";
-import type { PublishedPrinciple } from "@/lib/principles";
-
-const PLACEHOLDER_DESC =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum...";
-
-const featuredPrinciples = [
-  { title: "Centre-Stage Effect", description: PLACEHOLDER_DESC },
-  { title: "Chronoception", description: PLACEHOLDER_DESC },
-  { title: "Chunking", description: PLACEHOLDER_DESC },
-  { title: "Cognitive Tax", description: PLACEHOLDER_DESC },
-] as const;
-
-function PrincipleRow() {
-  return (
-    <>
-      {featuredPrinciples.map((item) => (
-        <PrincipleCard
-          key={item.title}
-          title={item.title}
-          description={item.description}
-        />
-      ))}
-    </>
-  );
-}
+import { getUserTier } from "@/lib/access";
+import {
+  getPrinciplesForHomeSection,
+  getPublishedPrinciples,
+  type PublishedPrinciple,
+} from "@/lib/principles";
 
 function PrinciplesFromDB({ principles }: { principles: PublishedPrinciple[] }) {
   return (
@@ -49,11 +30,14 @@ function PrinciplesFromDB({ principles }: { principles: PublishedPrinciple[] }) 
 }
 
 export default async function HomePage() {
-  const [aPrinciples, bPrinciples, cPrinciples] = await Promise.all([
-    getPrinciplesForHomeSection("a"),
-    getPrinciplesForHomeSection("b"),
-    getPrinciplesForHomeSection("c"),
-  ]);
+  const userTier = await getUserTier();
+  const [featuredPrinciples, aPrinciples, bPrinciples, cPrinciples] =
+    await Promise.all([
+      getPublishedPrinciples(4),
+      getPrinciplesForHomeSection("a"),
+      getPrinciplesForHomeSection("b"),
+      getPrinciplesForHomeSection("c"),
+    ]);
 
   return (
     <div className="flex min-h-full flex-col">
@@ -61,8 +45,7 @@ export default async function HomePage() {
       <main className="flex flex-1 flex-col pb-20">
         {/* 1. Hero + Search */}
         <section className="flex flex-col items-center gap-10 pt-16 text-center md:pt-20 lg:pt-28">
-          {/* Figma: Secondary large — Clash Display Semibold 72px, lh 1, tracking -3px */}
-          <h1 className="font-display font-semibold text-balance text-ink max-w-[min(100%,52rem)] text-[clamp(2rem,5.5vw+0.5rem,4.5rem)] leading-none tracking-[-3px] md:text-hero">
+          <h1 className="font-display font-semibold text-balance text-ink w-full max-w-[min(100%,52rem)] px-4 text-center whitespace-normal break-words text-4xl leading-none tracking-normal md:text-5xl md:tracking-[-3px] lg:text-7xl lg:tracking-[-3px]">
             <span className="block">
               Discover awesome Product principles and
             </span>
@@ -76,26 +59,26 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 2. Promo cards — horizontal scroll on mobile, two columns on desktop */}
-        <section className="mt-20">
-          <div className="-mx-6 px-6 md:mx-0 md:px-0">
-            <div className="flex flex-row flex-nowrap items-stretch gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none md:gap-6 md:overflow-visible">
-              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
-                <PromoCard variant="book" />
-              </div>
-              <div className="min-w-80 shrink-0 snap-start md:min-w-0 md:flex-1 flex flex-col">
-                <PromoCard variant="community" ctaHref="/#community" />
-              </div>
+        {/* 2. Promo cards */}
+        <section className="mt-20 w-full overflow-hidden px-4 md:px-6">
+          <div className="flex w-full flex-col gap-4 md:flex-row md:gap-6">
+            <div className="w-full md:flex-1">
+              <PromoCard variant="book" />
+            </div>
+            <div className="w-full md:flex-1">
+              <PromoCard variant="community" ctaHref="/#community" />
             </div>
           </div>
         </section>
 
         {/* 3. Featured skills */}
-        <section className="mt-28">
-          <HorizontalScrollSection title="Featured skills">
-            <PrincipleRow />
-          </HorizontalScrollSection>
-        </section>
+        {featuredPrinciples.length > 0 && (
+          <section className="mt-28">
+            <HorizontalScrollSection title="Featured skills">
+              <PrinciplesFromDB principles={featuredPrinciples} />
+            </HorizontalScrollSection>
+          </section>
+        )}
 
         {/* 4–6. Principle sections */}
         {aPrinciples.length > 0 && (
@@ -119,6 +102,10 @@ export default async function HomePage() {
             </HorizontalScrollSection>
           </section>
         )}
+
+        <section className="mt-20 px-4 md:px-0">
+          <LockedSection userTier={userTier} />
+        </section>
 
         <section className="mt-20">
           <CommunitySection />

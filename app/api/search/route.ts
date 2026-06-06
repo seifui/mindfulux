@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { getSupabaseClient } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -11,13 +11,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("principles")
-      .select("id, slug, title, description, category")
+      .select("id, slug, title, description, category, principle_number")
       .ilike("title", `%${query}%`)
       .eq("published", true)
-      .order("title", { ascending: true })
+      .order("principle_number", { ascending: true })
       .limit(10);
 
     if (error) {
