@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { loops } from "@/lib/loops";
-import { getSupabaseServer } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 const bodySchema = z.object({
   name: z.string().trim().min(1),
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
   const { name, email } = parsed.data;
 
-  const supabase = getSupabaseServer();
+  const supabase = getSupabaseAdmin();
   if (!supabase) {
     return NextResponse.json(
       { error: "Server configuration error" },

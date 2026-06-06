@@ -1,4 +1,24 @@
 {
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "settings": "Settings",
+    "loginTitle": "Sign in — MindfulUX Growth",
+    "loginHeading": "Welcome back",
+    "loginSubtext": "Browse 30 principles for free. Sign in to unlock all 150.",
+    "signInWithGoogle": "Sign in with Google",
+    "googleSignInLoading": "Redirecting to Google…",
+    "googleSignInError": "Could not start Google sign-in. Please try again.",
+    "orDivider": "OR"
+  },
+  "access": {
+    "showingCount": "Showing {visible} of {total} principles",
+    "lockedTitle": "Unlock all 150 principles",
+    "lockedCta": "Sign in to unlock all principles",
+    "lockedSubtext": "Create a free account to read every UX psychology principle.",
+    "upgradeWallTitle": "This principle is locked",
+    "upgradeWallDescription": "Sign in to your free account to read the full article."
+  },
   "home": {
     "promoBookTitle": "Book Launching soon!",
     "promoBookDescription": "Learn MindfulUX principles in depth with practical examples and exercises.",

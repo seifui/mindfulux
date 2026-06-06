@@ -1,9 +1,12 @@
 import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import { execFile } from "node:child_process";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import pdf from "pdf-parse";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 // Load .env.local from the repo root before anything else.
 config({ path: path.resolve(process.cwd(), ".env.local") });
@@ -230,6 +233,21 @@ function buildDescription(whatIsIt: string | null): string | null {
   return first.trim();
 }
 
+/** Parse in a child process so corrupt PDFs cannot crash the batch. */
+async function parsePdfFile(absolutePath: string): Promise<{ text: string }> {
+  const worker = path.resolve(process.cwd(), "scripts/seeds/parse-pdf-once.ts");
+  const tsxCli = path.resolve(
+    process.cwd(),
+    "node_modules/tsx/dist/cli.mjs",
+  );
+  const { stdout } = await execFileAsync(
+    process.execPath,
+    [tsxCli, worker, absolutePath],
+    { maxBuffer: 16 * 1024 * 1024 },
+  );
+  return JSON.parse(stdout) as { text: string };
+}
+
 /** Walk `dir` recursively and return absolute paths to every `.pdf` file. */
 async function walkPdfFiles(dir: string): Promise<string[]> {
   const out: string[] = [];
@@ -293,8 +311,7 @@ async function main() {
     const slug = slugify(title);
 
     try {
-      const buffer = await fs.readFile(absolutePath);
-      const parsed = await pdf(buffer);
+      const parsed = await parsePdfFile(absolutePath);
       const sections = extractSections(parsed.text);
 
       const hasContent = Object.values(sections).some((v) => v !== null);
@@ -344,6 +361,14 @@ async function main() {
   }
 
   console.log(`\nDone: ${inserted} inserted, ${failed} failed`);
+
+  const assignScript = path.resolve(
+    process.cwd(),
+    "scripts/seeds/assign-principle-numbers.ts",
+  );
+  const tsxCli = path.resolve(process.cwd(), "node_modules/tsx/dist/cli.mjs");
+  console.log("\n→ Assigning principle_number 1, 2, 3… (row order)…");
+  await execFileAsync(process.execPath, [tsxCli, assignScript]);
 }
 
 main().catch((err) => {

@@ -7,9 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx scripts/seeds/extract-and-seed.ts"
+    "seed": "tsx scripts/seeds/apply-principle-number-migration.ts && tsx scripts/seeds/extract-and-seed.ts",
+    "seed:migrate": "tsx scripts/seeds/apply-principle-number-migration.ts",
+    "seed:numbers": "tsx scripts/seeds/assign-principle-numbers.ts",
+    "seed:verify-cloudflare": "tsx scripts/seeds/verify-cloudflare-images.ts",
+    "seed:migrate:images": "tsx scripts/seeds/apply-section-image-migrations.ts",
+    "seed:upload-images": "tsx scripts/seeds/upload-principle-images.ts",
+    "seed:what-is-it-images": "tsx scripts/seeds/apply-what-is-it-images.ts",
+    "seed:theory-in-action-images": "tsx scripts/seeds/apply-theory-in-action-images.ts"
   },
   "dependencies": {
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.100.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -38,6 +48,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "pdf-parse": "^1.1.1",
+    "postgres": "^3.4.9",
     "tailwindcss": "^4",
     "tsx": "^4.19.3",
     "typescript": "^5"

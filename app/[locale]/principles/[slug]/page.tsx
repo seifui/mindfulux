@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image, { type StaticImageData } from "next/image";
 
 import { Navbar } from "@/components/layout/Navbar";
+import { PrincipleUpgradeWall } from "@/components/features/PrincipleUpgradeWall";
 import { PrincipleViewTracker } from "@/components/features/PrincipleViewTracker";
+import { getPrincipleLimit, getUserTier } from "@/lib/access";
 import { getImageUrl } from "@/lib/cloudflare-images";
-import { getPrincipleDetail } from "@/lib/principles";
+import {
+  getPrincipleDetail,
+  getPrincipleTeaser,
+} from "@/lib/principles";
 import { BackButton } from "./BackButton";
 
 import defaultPrincipleHero from "../../../../public/illustrations/centre-stage-effect-detail.png";
@@ -19,6 +25,11 @@ function principleHeroSrc(
   const t = illustrationUrl?.trim();
   if (!t || t.toLowerCase() === "null") return defaultPrincipleHero;
   return getImageUrl(t, { fallback: DETAIL_HERO_FALLBACK_PATH });
+}
+
+function hasImageRef(ref: string | null | undefined): boolean {
+  const t = ref?.trim();
+  return Boolean(t && t.toLowerCase() !== "null");
 }
 
 // ── Content helpers ────────────────────────────────────────────────────────────
@@ -51,7 +62,15 @@ function InlineText({ text }: { text: string }) {
 
 // ── Theory in Action section — each item has a caption + image placeholder ────
 
-function TheoryInActionSection({ content }: { content: string | null }) {
+function TheoryInActionSection({
+  title,
+  content,
+  imageUrls,
+}: {
+  title: string;
+  content: string | null;
+  imageUrls: string[] | null;
+}) {
   if (!content) return null;
 
   const hasBullets = content.includes("\u25CF") || content.includes("\u2022");
@@ -65,24 +84,41 @@ function TheoryInActionSection({ content }: { content: string | null }) {
         Theory in Action
       </h2>
       <div className="flex flex-col gap-8">
-        {items.map((item, i) => (
-          <div key={i} className="flex flex-col gap-3">
-            <p className="font-sans font-medium text-base text-ink-secondary">
-              <InlineText text={item} />
-            </p>
-            <div className="w-full h-[340px] rounded-skill bg-skill-card" />
-          </div>
-        ))}
+        {items.map((item, i) => {
+          const ref = imageUrls?.[i];
+          const showImage = hasImageRef(ref);
+          const src = showImage ? getImageUrl(ref) : "";
+
+          return (
+            <div key={i} className="flex flex-col gap-3">
+              <p className="font-sans font-medium text-base text-ink-secondary">
+                <InlineText text={item} />
+              </p>
+              {showImage ? (
+                <div className="flex justify-center overflow-hidden rounded-skill bg-skill-card p-4 md:p-6">
+                  <Image
+                    src={src}
+                    alt={`${title} — Theory in action ${i + 1}`}
+                    width={1200}
+                    height={1600}
+                    className="h-auto w-auto max-h-[min(70vh,560px)] max-w-full object-contain"
+                    sizes="(max-width: 768px) 100vw, 672px"
+                  />
+                </div>
+              ) : (
+                <div className="min-h-[200px] w-full rounded-skill bg-skill-card" />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ── Section component ──────────────────────────────────────────────────────────
+// ── Section body (shared by Section + WhatIsItSection) ────────────────────────
 
-function Section({ heading, content }: { heading: string; content: string | null }) {
-  if (!content) return null;
-
+function SectionBody({ content }: { content: string }) {
   const hasBullets = content.includes("\u25CF") || content.includes("\u2022");
 
   if (hasBullets) {
@@ -92,38 +128,102 @@ function Section({ heading, content }: { heading: string; content: string | null
       .filter(Boolean);
 
     return (
-      <div>
-        <h2 className="font-display font-semibold text-detail-heading text-ink-secondary mb-4">{heading}</h2>
-        <ul className="space-y-2">
-          {items.map((item, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="text-accent-brand mt-1">•</span>
-              <span className="font-sans font-medium text-base text-ink-secondary">
-                <InlineText text={item} />
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="space-y-2">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2">
+            <span className="text-accent-brand mt-1">•</span>
+            <span className="font-sans font-medium text-base text-ink-secondary">
+              <InlineText text={item} />
+            </span>
+          </li>
+        ))}
+      </ul>
     );
   }
 
   const paragraphs = content.split("\n").filter(Boolean);
   return (
+    <div className="space-y-3">
+      {paragraphs.map((p, i) => (
+        <p key={i} className="font-sans font-medium text-base text-ink-secondary">
+          <InlineText text={p} />
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function WhatIsItSection({
+  title,
+  content,
+  imageUrl,
+}: {
+  title: string;
+  content: string | null;
+  imageUrl: string | null;
+}) {
+  if (!content && !hasImageRef(imageUrl)) return null;
+
+  const showImage = hasImageRef(imageUrl);
+  const src = showImage ? getImageUrl(imageUrl) : "";
+
+  return (
     <div>
-      <h2 className="font-display font-semibold text-detail-heading text-ink-secondary mb-4">{heading}</h2>
-      <div className="space-y-3">
-        {paragraphs.map((p, i) => (
-          <p key={i} className="font-sans font-medium text-base text-ink-secondary">
-            <InlineText text={p} />
-          </p>
-        ))}
-      </div>
+      <h2 className="font-display font-semibold text-detail-heading text-ink-secondary mb-4">
+        What Is It?
+      </h2>
+      {content ? <SectionBody content={content} /> : null}
+      {showImage && (
+        <div className="mt-6 overflow-hidden rounded-skill bg-principle-detail-hero-well">
+          <Image
+            src={src}
+            alt={`${title} — What is it`}
+            width={672}
+            height={378}
+            className="mx-auto h-auto w-full max-h-[480px] object-contain"
+            sizes="(max-width: 768px) 100vw, 672px"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Section component ──────────────────────────────────────────────────────────
+
+function Section({ heading, content }: { heading: string; content: string | null }) {
+  if (!content) return null;
+
+  return (
+    <div>
+      <h2 className="font-display font-semibold text-detail-heading text-ink-secondary mb-4">
+        {heading}
+      </h2>
+      <SectionBody content={content} />
     </div>
   );
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const principle =
+    (await getPrincipleDetail(slug)) ?? (await getPrincipleTeaser(slug));
+
+  if (!principle) {
+    return { title: "Principle not found" };
+  }
+
+  return {
+    title: `${principle.title} — MindfulUX Growth`,
+    description: principle.description ?? undefined,
+  };
+}
 
 export default async function PrincipleDetailPage({
   params,
@@ -131,10 +231,25 @@ export default async function PrincipleDetailPage({
   params: Promise<{ slug: string; locale: string }>;
 }) {
   const { slug } = await params;
+  const userTier = await getUserTier();
+  const principleLimit = getPrincipleLimit(userTier);
   const principle = await getPrincipleDetail(slug);
 
   if (!principle) {
-    notFound();
+    const teaser = await getPrincipleTeaser(slug);
+    if (!teaser || teaser.principle_number <= principleLimit) {
+      notFound();
+    }
+
+    return (
+      <div className="flex min-h-full flex-col">
+        <Navbar />
+        <main className="mx-auto w-full max-w-content px-6 py-10 md:px-0">
+          <BackButton />
+          <PrincipleUpgradeWall principle={teaser} />
+        </main>
+      </div>
+    );
   }
 
   return (
@@ -174,12 +289,20 @@ export default async function PrincipleDetailPage({
 
         {/* Content sections */}
         <div className="space-y-12">
-          <Section heading="What Is It?" content={principle.what_is_it} />
+          <WhatIsItSection
+            title={principle.title}
+            content={principle.what_is_it}
+            imageUrl={principle.what_is_it_image_url}
+          />
           <Section heading="History" content={principle.history} />
           <Section heading="The Psychology Behind It" content={principle.psychology_behind} />
           <Section heading="Why It Matters" content={principle.why_it_matters} />
           <Section heading="How to Apply It" content={principle.how_to_apply} />
-          <TheoryInActionSection content={principle.theory_in_action} />
+          <TheoryInActionSection
+            title={principle.title}
+            content={principle.theory_in_action}
+            imageUrls={principle.theory_in_action_image_urls}
+          />
         </div>
 
         {/* Final Thought */}
