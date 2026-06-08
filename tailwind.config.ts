@@ -134,6 +134,7 @@ const config = {
       maxWidth: {
         page: "1305px",
         content: "42.5rem", // 680px — principle detail page article column (Figma node 4648:2332)
+        teaser: "30rem", // 480px — coming-soon content column
       },
 
       // ── Shadows ─────────────────────────────────────────────────────────────

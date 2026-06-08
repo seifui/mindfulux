@@ -21,5 +21,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Exclude /auth so next-intl does not rewrite /auth/callback → /en/auth/callback (404).
-  matcher: ["/((?!api|auth|_next|_vercel|.*\\..*).*)"],
+  matcher: ["/((?!api|auth|coming-soon|_next|_vercel|.*\\..*).*)"],
 };

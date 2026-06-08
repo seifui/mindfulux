@@ -3,9 +3,10 @@
 import { Menu } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
-import { useTheme } from "next-themes";
 import { type ReactNode, useState } from "react";
 
+import { LogoMark } from "@/components/brand/LogoMark";
+import { ThemeToggle } from "@/components/brand/ThemeToggle";
 import {
   Sheet,
   SheetContent,
@@ -19,74 +20,6 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/principles", label: "Principles" },
 ] as const;
-
-function LogoMark() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="size-8 shrink-0 md:size-9"
-      aria-hidden
-    >
-      <g clipPath="url(#clip0_4566_1399)">
-        <path
-          d="M0 10.0428H10.0322L5.01609 -0.000244141L0 10.0428Z"
-          fill="#4F4040"
-        />
-      </g>
-      <g clipPath="url(#clip1_4566_1399)">
-        <path
-          d="M23.2001 -0.000106812H13.168V10.043H23.2001V-0.000106812Z"
-          fill="#B68973"
-        />
-      </g>
-      <g clipPath="url(#clip2_4566_1399)">
-        <path
-          d="M10.0322 13.1793H0V23.2224H10.0322V13.1793Z"
-          fill="#B68973"
-        />
-      </g>
-      <g clipPath="url(#clip3_4566_1399)">
-        <path
-          d="M18.1841 23.2224C20.9544 23.2224 23.2001 20.9742 23.2001 18.2008C23.2001 15.4275 20.9544 13.1793 18.1841 13.1793C15.4137 13.1793 13.168 15.4275 13.168 18.2008C13.168 20.9742 15.4137 23.2224 18.1841 23.2224Z"
-          fill="#B68973"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_4566_1399">
-          <rect width="10.0322" height="10.0431" fill="white" />
-        </clipPath>
-        <clipPath id="clip1_4566_1399">
-          <rect
-            width="10.0322"
-            height="10.0431"
-            fill="white"
-            transform="translate(13.168)"
-          />
-        </clipPath>
-        <clipPath id="clip2_4566_1399">
-          <rect
-            width="10.0322"
-            height="10.0431"
-            fill="white"
-            transform="translate(0 13.1787)"
-          />
-        </clipPath>
-        <clipPath id="clip3_4566_1399">
-          <rect
-            width="10.0322"
-            height="10.0431"
-            fill="white"
-            transform="translate(13.168 13.1787)"
-          />
-        </clipPath>
-      </defs>
-    </svg>
-  );
-}
 
 function MainNavLinks({
   className,
@@ -148,68 +81,6 @@ function LocaleSwitcher({ onNavigate }: { onNavigate?: () => void }) {
       }
     >
       {nextLocale === "si" ? "සිංහල" : "English"}
-    </button>
-  );
-}
-
-function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
-  return (
-    <button
-      type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex size-9 cursor-pointer items-center justify-center border-0 bg-transparent p-0"
-      aria-label={
-        isDark ? "Switch to light mode" : "Switch to dark mode"
-      }
-    >
-      <svg
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="size-9 shrink-0"
-        aria-hidden
-      >
-        <path
-          d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z"
-          fill="#B68973"
-          fillOpacity="0.14"
-        />
-        <g clipPath="url(#clip0_4566_1431)">
-          {isDark ? (
-            <g transform="translate(10 10) scale(0.8333333333333334)">
-              <path
-                d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
-                stroke="#B68973"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </g>
-          ) : (
-            <path
-              d="M20.0003 11.6667V13.3333M20.0003 26.6667V28.3333M13.3337 20H11.667M15.2621 15.2618L14.0836 14.0833M24.7386 15.2618L25.9171 14.0833M15.2621 24.7417L14.0836 25.9202M24.7386 24.7417L25.9171 25.9202M28.3337 20H26.667M24.167 20C24.167 22.3012 22.3015 24.1667 20.0003 24.1667C17.6991 24.1667 15.8337 22.3012 15.8337 20C15.8337 17.6988 17.6991 15.8333 20.0003 15.8333C22.3015 15.8333 24.167 17.6988 24.167 20Z"
-              stroke="#B68973"
-              strokeWidth="1.66667"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          )}
-        </g>
-        <defs>
-          <clipPath id="clip0_4566_1431">
-            <rect
-              width="20"
-              height="20"
-              fill="white"
-              transform="translate(10 10)"
-            />
-          </clipPath>
-        </defs>
-      </svg>
     </button>
   );
 }
