@@ -1,7 +1,6 @@
 import { LogoMark } from "@/components/brand/LogoMark";
 
 import { ComingSoonForm } from "./ComingSoonForm";
-import { ComingSoonThemeToggle } from "./ComingSoonThemeToggle";
 
 export default function ComingSoonPage() {
   return (
@@ -31,7 +30,6 @@ export default function ComingSoonPage() {
         <p className="text-sm text-muted-text">
           &copy; 2025 MindfulUX Growth
         </p>
-        <ComingSoonThemeToggle />
       </footer>
     </div>
   );
