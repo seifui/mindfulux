@@ -35,20 +35,18 @@ export default async function SettingsPage() {
     <div className="flex min-h-full flex-col">
       <Navbar />
 
-      <main className="flex flex-1 flex-col pb-20">
-        <header className="pb-8 pt-10 md:pb-10 md:pt-14">
+      <main className="mx-auto flex w-full max-w-content flex-1 flex-col px-6 pb-20 pt-10 md:px-0 md:pt-14">
+        <header className="pb-8 md:pb-10">
           <h1 className="font-display text-detail-title font-semibold leading-none text-ink">
             Settings
           </h1>
         </header>
 
-        <div className="mx-auto w-full max-w-content px-6 md:px-0">
-          <SettingsForm
-            email={email}
-            initialName={initialName}
-            isGoogleUser={isGoogleUser}
-          />
-        </div>
+        <SettingsForm
+          email={email}
+          initialName={initialName}
+          isGoogleUser={isGoogleUser}
+        />
       </main>
     </div>
   );

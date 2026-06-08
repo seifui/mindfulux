@@ -17,6 +17,7 @@
     "seed:theory-in-action-images": "tsx scripts/seeds/apply-theory-in-action-images.ts"
   },
   "dependencies": {
+    "@radix-ui/react-toast": "^1.2.16",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.10.3",

@@ -28,7 +28,7 @@ function LogoMark() {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="size-9 shrink-0 md:size-10"
+      className="size-8 shrink-0 md:size-9"
       aria-hidden
     >
       <g clipPath="url(#clip0_4566_1399)">
@@ -160,17 +160,16 @@ function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="cursor-pointer border-0 bg-transparent p-0"
+      className="inline-flex size-9 cursor-pointer items-center justify-center border-0 bg-transparent p-0"
       aria-label={
         isDark ? "Switch to light mode" : "Switch to dark mode"
       }
     >
       <svg
-        width="40"
-        height="40"
         viewBox="0 0 40 40"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="size-9 shrink-0"
         aria-hidden
       >
         <path

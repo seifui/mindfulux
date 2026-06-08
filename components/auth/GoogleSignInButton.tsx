@@ -60,7 +60,7 @@ export function GoogleSignInButton() {
         type="button"
         onClick={handleSignIn}
         disabled={loading}
-        className="flex w-full items-center justify-center gap-3 rounded-card border border-border-subtle bg-card px-4 py-3 text-sm font-medium text-ink-secondary transition-colors hover:bg-input-fill disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-11 w-full items-center justify-center gap-3 rounded-pill border border-border-subtle bg-card px-5 text-sm font-medium text-ink-secondary transition-colors hover:bg-input-fill disabled:cursor-not-allowed disabled:opacity-60"
       >
         <GoogleLogo />
         {loading ? t("googleSignInLoading") : t("signInWithGoogle")}

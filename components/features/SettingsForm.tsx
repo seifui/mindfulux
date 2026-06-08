@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -25,8 +26,6 @@ export function SettingsForm({
   const router = useRouter();
   const [name, setName] = useState(initialName);
   const [saveLoading, setSaveLoading] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
@@ -35,8 +34,6 @@ export function SettingsForm({
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaveLoading(true);
-    setSaveSuccess(false);
-    setSaveError(null);
 
     const supabase = createClient();
     const { error } = await supabase.auth.updateUser({
@@ -44,12 +41,20 @@ export function SettingsForm({
     });
 
     if (error) {
-      setSaveError("Could not update profile. Please try again.");
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again.",
+      });
       setSaveLoading(false);
       return;
     }
 
-    setSaveSuccess(true);
+    toast({
+      title: "Profile updated",
+      description: "Your changes have been saved.",
+      duration: 3000,
+    });
     setSaveLoading(false);
     router.refresh();
   }
@@ -84,8 +89,7 @@ export function SettingsForm({
   }
 
   return (
-    <div className="flex flex-col gap-12">
-      <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="font-display text-xl font-semibold text-ink">General</h2>
           <p className="text-sm text-muted-text">
@@ -105,10 +109,7 @@ export function SettingsForm({
               id="settings-name"
               type="text"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setSaveSuccess(false);
-              }}
+              onChange={(e) => setName(e.target.value)}
               autoComplete="name"
               disabled={saveLoading}
               className={inputClassName}
@@ -159,35 +160,26 @@ export function SettingsForm({
           ) : null}
         </div>
 
-        <form onSubmit={handleSave} className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Button
-            type="submit"
-            disabled={saveLoading}
-            className="h-12 rounded-pill bg-accent-brand px-6 text-base font-semibold text-white hover:bg-accent-brand/90"
-          >
-            {saveLoading ? "Saving…" : "Save"}
-          </Button>
-          {saveSuccess ? (
-            <p className="text-sm font-medium text-ink">Profile updated</p>
-          ) : null}
-          {saveError ? (
-            <p className="text-sm text-destructive">{saveError}</p>
-          ) : null}
+        <form onSubmit={handleSave}>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              type="submit"
+              disabled={saveLoading || signOutLoading}
+              className="h-12 rounded-pill bg-accent-brand px-6 text-base font-semibold text-white hover:bg-accent-brand/90"
+            >
+              {saveLoading ? "Saving…" : "Save"}
+            </Button>
+            <Button
+              type="button"
+              variant="link"
+              disabled={saveLoading || signOutLoading}
+              onClick={() => void handleSignOut()}
+              className="h-12 px-2 text-base font-semibold text-accent-brand hover:text-accent-brand/90"
+            >
+              {signOutLoading ? "Signing out…" : "Sign out"}
+            </Button>
+          </div>
         </form>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="font-display text-xl font-semibold text-ink">Account</h2>
-        <Button
-          type="button"
-          variant="link"
-          disabled={signOutLoading}
-          onClick={() => void handleSignOut()}
-          className="h-auto w-fit justify-start p-0 text-base font-medium text-accent-brand hover:text-accent-brand/90"
-        >
-          {signOutLoading ? "Signing out…" : "Sign out"}
-        </Button>
-      </section>
-    </div>
+    </section>
   );
 }
