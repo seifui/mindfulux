@@ -16,9 +16,10 @@ import { createClient } from "@/lib/supabase/client";
 
 type SignUpFormProps = {
   onSwitchToSignIn: () => void;
+  onSignUpSuccess?: () => void;
 };
 
-export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
+export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProps) {
   const t = useTranslations("auth");
   const locale = useLocale();
   const [email, setEmail] = useState("");
@@ -26,7 +27,6 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const passwordsMismatch =
     confirmPassword.length > 0 && password !== confirmPassword;
@@ -40,7 +40,6 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
 
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     const principlesPath =
       locale === "en" ? "/principles" : `/${locale}/principles`;
@@ -59,7 +58,7 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
       return;
     }
 
-    setSuccess(true);
+    onSignUpSuccess?.();
     setLoading(false);
   }
 
@@ -119,12 +118,6 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
       {error ? (
         <p className="text-sm text-destructive" role="alert">
           {error}
-        </p>
-      ) : null}
-
-      {success ? (
-        <p className="text-sm text-ink" role="status">
-          {t("signUpSuccess")}
         </p>
       ) : null}
 

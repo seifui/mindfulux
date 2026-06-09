@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import path from "node:path";
 
-config({ path: path.resolve(process.cwd(), ".env.local") });
+config({ path: path.resolve(process.cwd(), ".env.local"), override: true });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

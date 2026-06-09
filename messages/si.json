@@ -30,7 +30,9 @@
     "passwordsDoNotMatch": "[SI] Passwords do not match",
     "signInError": "[SI] Invalid email or password. Please try again.",
     "signUpError": "[SI] Could not create your account. Please try again.",
-    "signUpSuccess": "[SI] Check your email to confirm your account."
+    "signUpSuccess": "[SI] Check your email to confirm your account.",
+    "signUpSuccessHeading": "[SI] Check your inbox",
+    "signUpSuccessSubtext": "[SI] We sent a confirmation link to your email address"
   },
   "access": {
     "showingCount": "[SI] Showing {visible} of {total} principles",
