@@ -64,7 +64,7 @@ export function SettingsForm({
     setResetSuccess(false);
     setResetError(null);
 
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/settings")}`;
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/reset-password")}`;
     const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,

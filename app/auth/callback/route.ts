@@ -29,9 +29,15 @@ function resolveRedirectOrigin(request: Request): string {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  let next = searchParams.get("next") ?? "/principles";
-  if (!next.startsWith("/")) {
-    next = "/principles";
+  const nextParam = searchParams.get("next");
+  let next: string;
+  if (nextParam === "/reset-password") {
+    next = "/reset-password";
+  } else {
+    next = nextParam ?? "/principles";
+    if (!next.startsWith("/")) {
+      next = "/principles";
+    }
   }
 
   const origin = resolveRedirectOrigin(request);

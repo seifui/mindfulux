@@ -4,6 +4,7 @@ import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { PostHogProvider } from "posthog-js/react";
+import { AuthCodeRedirect } from "@/components/auth/AuthCodeRedirect";
 import posthog from "@/lib/posthog";
 
 function PageViewTracker() {
@@ -28,6 +29,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <PostHogProvider client={posthog}>
         <Suspense fallback={null}>
           <PageViewTracker />
+          <AuthCodeRedirect />
         </Suspense>
         {children}
       </PostHogProvider>

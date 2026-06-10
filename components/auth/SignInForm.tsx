@@ -15,26 +15,36 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+type FormView = "sign_in" | "forgot_password";
+
 type SignInFormProps = {
   onSwitchToSignUp: () => void;
+  onResetPasswordSuccess?: () => void;
 };
 
-export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
+export function SignInForm({
+  onSwitchToSignUp,
+  onResetPasswordSuccess,
+}: SignInFormProps) {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
+  const [view, setView] = useState<FormView>("sign_in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [resetMessage, setResetMessage] = useState<string | null>(null);
+
+  function handleBackToSignIn() {
+    setView("sign_in");
+    setError(null);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setResetMessage(null);
 
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -54,7 +64,8 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
     router.refresh();
   }
 
-  async function handleForgotPassword() {
+  async function handleResetSubmit(e: React.FormEvent) {
+    e.preventDefault();
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       setError(t("forgotPasswordEmailRequired"));
@@ -63,9 +74,8 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
 
     setResetLoading(true);
     setError(null);
-    setResetMessage(null);
 
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/settings")}`;
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/reset-password")}`;
     const supabase = createClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       trimmedEmail,
@@ -78,8 +88,65 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
       return;
     }
 
-    setResetMessage(t("forgotPasswordSuccess"));
+    onResetPasswordSuccess?.();
     setResetLoading(false);
+  }
+
+  if (view === "forgot_password") {
+    return (
+      <form className="space-y-4" onSubmit={(e) => void handleResetSubmit(e)}>
+        <div className="space-y-2 text-center">
+          <h2 className="font-display text-xl font-semibold tracking-[-0.03em] text-ink md:text-2xl">
+            {t("resetPasswordHeading")}
+          </h2>
+          <p className="text-sm text-muted-text md:text-base">
+            {t("resetPasswordSubtext")}
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="reset-email" className={authLabelClassName}>
+            {t("emailLabel")}
+          </Label>
+          <Input
+            id="reset-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("emailPlaceholder")}
+            autoComplete="email"
+            required
+            disabled={resetLoading}
+            className={authInputClassName}
+          />
+        </div>
+
+        {error ? (
+          <p className="text-sm text-destructive" role="alert">
+            {error}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={resetLoading}
+          className={authSubmitButtonClassName}
+        >
+          {resetLoading ? t("sendResetLinkLoading") : t("sendResetLinkButton")}
+        </button>
+
+        <p className="text-center">
+          <button
+            type="button"
+            onClick={handleBackToSignIn}
+            disabled={resetLoading}
+            className={authLinkClassName}
+          >
+            {t("backToSignIn")}
+          </button>
+        </p>
+      </form>
+    );
   }
 
   return (
@@ -96,7 +163,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           placeholder={t("emailPlaceholder")}
           autoComplete="email"
           required
-          disabled={loading || resetLoading}
+          disabled={loading}
           className={authInputClassName}
         />
       </div>
@@ -111,7 +178,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           onChange={setPassword}
           placeholder={t("passwordPlaceholder")}
           autoComplete="current-password"
-          disabled={loading || resetLoading}
+          disabled={loading}
         />
       </div>
 
@@ -121,15 +188,9 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
         </p>
       ) : null}
 
-      {resetMessage ? (
-        <p className="text-sm text-ink" role="status">
-          {resetMessage}
-        </p>
-      ) : null}
-
       <button
         type="submit"
-        disabled={loading || resetLoading}
+        disabled={loading}
         className={authSubmitButtonClassName}
       >
         {loading ? t("signInLoading") : t("signInButton")}
@@ -138,11 +199,14 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
       <div className="space-y-2 text-center">
         <button
           type="button"
-          onClick={() => void handleForgotPassword()}
-          disabled={loading || resetLoading}
+          onClick={() => {
+            setError(null);
+            setView("forgot_password");
+          }}
+          disabled={loading}
           className={authLinkClassName}
         >
-          {resetLoading ? t("forgotPasswordLoading") : t("forgotPassword")}
+          {t("forgotPassword")}
         </button>
         <p>
           <button
