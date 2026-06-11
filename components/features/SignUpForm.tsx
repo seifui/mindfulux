@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import type { AuthError } from "@supabase/supabase-js";
 
 import {
   authInputClassName,
@@ -13,6 +14,30 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+
+const MIN_PASSWORD_LENGTH = 8;
+
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function mapSignUpError(
+  signUpError: AuthError,
+  t: ReturnType<typeof useTranslations<"auth">>,
+): string {
+  if (process.env.NODE_ENV === "development") {
+    console.error("[SignUpForm]", signUpError.code, signUpError.message);
+  }
+
+  switch (signUpError.code) {
+    case "weak_password":
+      return t("signUpErrorWeakPassword");
+    case "invalid_email":
+      return t("signUpErrorInvalidEmail");
+    default:
+      return t("signUpError");
+  }
+}
 
 type SignUpFormProps = {
   onSwitchToSignIn: () => void;
@@ -31,8 +56,45 @@ export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProp
   const passwordsMismatch =
     confirmPassword.length > 0 && password !== confirmPassword;
 
+  function handleEmailChange(value: string) {
+    setEmail(value);
+    setError(null);
+  }
+
+  function handlePasswordChange(value: string) {
+    setPassword(value);
+    setError(null);
+  }
+
+  function handleConfirmPasswordChange(value: string) {
+    setConfirmPassword(value);
+    setError(null);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
+      setError(t("signUpErrorEmailRequired"));
+      return;
+    }
+
+    if (!isValidEmail(trimmedEmail)) {
+      setError(t("signUpErrorInvalidEmail"));
+      return;
+    }
+
+    if (!password) {
+      setError(t("signUpErrorPasswordRequired"));
+      return;
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(t("signUpErrorWeakPassword"));
+      return;
+    }
 
     if (password !== confirmPassword) {
       return;
@@ -47,13 +109,13 @@ export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProp
 
     const supabase = createClient();
     const { error: signUpError } = await supabase.auth.signUp({
-      email: email.trim(),
+      email: trimmedEmail,
       password,
       options: { emailRedirectTo },
     });
 
     if (signUpError) {
-      setError(t("signUpError"));
+      setError(mapSignUpError(signUpError, t));
       setLoading(false);
       return;
     }
@@ -72,10 +134,9 @@ export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProp
           id="sign-up-email"
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => handleEmailChange(e.target.value)}
           placeholder={t("emailPlaceholder")}
           autoComplete="email"
-          required
           disabled={loading}
           className={authInputClassName}
         />
@@ -88,7 +149,7 @@ export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProp
         <PasswordInput
           id="sign-up-password"
           value={password}
-          onChange={setPassword}
+          onChange={handlePasswordChange}
           placeholder={t("passwordPlaceholder")}
           autoComplete="new-password"
           disabled={loading}
@@ -102,7 +163,7 @@ export function SignUpForm({ onSwitchToSignIn, onSignUpSuccess }: SignUpFormProp
         <PasswordInput
           id="sign-up-confirm-password"
           value={confirmPassword}
-          onChange={setConfirmPassword}
+          onChange={handleConfirmPasswordChange}
           placeholder={t("confirmPasswordPlaceholder")}
           autoComplete="new-password"
           disabled={loading}

@@ -50,6 +50,10 @@
     "passwordsDoNotMatch": "[SI] Passwords do not match",
     "signInError": "[SI] Invalid email or password. Please try again.",
     "signUpError": "[SI] Could not create your account. Please try again.",
+    "signUpErrorEmailRequired": "[SI] Please enter your email address",
+    "signUpErrorInvalidEmail": "[SI] Please enter a valid email address",
+    "signUpErrorPasswordRequired": "[SI] Please enter a password",
+    "signUpErrorWeakPassword": "[SI] Password must be at least 8 characters",
     "signUpSuccess": "[SI] Check your email to confirm your account.",
     "signUpSuccessHeading": "[SI] Check your inbox",
     "signUpSuccessSubtext": "[SI] We sent a confirmation link to your email address"
