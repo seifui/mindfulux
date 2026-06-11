@@ -176,7 +176,10 @@ export function UpdatePasswordForm() {
         <PasswordInput
           id="new-password"
           value={password}
-          onChange={setPassword}
+          onChange={(value) => {
+            setPassword(value);
+            setError(null);
+          }}
           placeholder={t("newPasswordPlaceholder")}
           autoComplete="new-password"
           disabled={formDisabled}
@@ -190,7 +193,10 @@ export function UpdatePasswordForm() {
         <PasswordInput
           id="confirm-new-password"
           value={confirmPassword}
-          onChange={setConfirmPassword}
+          onChange={(value) => {
+            setConfirmPassword(value);
+            setError(null);
+          }}
           placeholder={t("confirmPasswordPlaceholder")}
           autoComplete="new-password"
           disabled={formDisabled}
@@ -203,7 +209,7 @@ export function UpdatePasswordForm() {
         ) : null}
       </div>
 
-      {error ? (
+      {error && !passwordsMismatch ? (
         <p className="text-sm text-destructive" role="alert">
           {error}
         </p>

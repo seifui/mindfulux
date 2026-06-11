@@ -1,7 +1,8 @@
 "use client";
 
 import { Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { authLinkClassName } from "@/components/auth/auth-form-styles";
@@ -97,9 +98,20 @@ function ResetPasswordSuccessCard({
 
 export function LoginAuthForm() {
   const t = useTranslations("auth");
+  const searchParams = useSearchParams();
+  const errorCode = searchParams.get("error_code");
   const [view, setView] = useState<AuthView>("sign_in");
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [resetPasswordSuccess, setResetPasswordSuccess] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (errorCode === "otp_expired") {
+      setUrlError(t("authErrorOtpExpired"));
+    } else if (errorCode === "auth_callback_failed") {
+      setUrlError(t("authErrorCallbackFailed"));
+    }
+  }, [errorCode]);
 
   function handleSwitchToSignIn() {
     setSignUpSuccess(false);
@@ -130,6 +142,12 @@ export function LoginAuthForm() {
 
   return (
     <div className="space-y-6">
+      {urlError ? (
+        <p className="text-sm text-destructive text-center" role="alert">
+          {urlError}
+        </p>
+      ) : null}
+
       <GoogleSignInButton />
 
       <div className="relative">

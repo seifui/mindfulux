@@ -72,6 +72,12 @@ export function SignInForm({
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setError(t("signUpErrorInvalidEmail"));
+      return;
+    }
+
     setResetLoading(true);
     setError(null);
 

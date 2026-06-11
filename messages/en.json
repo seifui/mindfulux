@@ -56,7 +56,9 @@
     "signUpErrorWeakPassword": "Password must be at least 8 characters",
     "signUpSuccess": "Check your email to confirm your account.",
     "signUpSuccessHeading": "Check your inbox",
-    "signUpSuccessSubtext": "We sent a confirmation link to your email address"
+    "signUpSuccessSubtext": "We sent a confirmation link to your email address",
+    "authErrorOtpExpired": "This link has expired. Please request a new one.",
+    "authErrorCallbackFailed": "Something went wrong. Please try signing in again."
   },
   "access": {
     "showingCount": "Showing {visible} of {total} principles",
