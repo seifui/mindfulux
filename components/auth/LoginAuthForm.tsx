@@ -106,9 +106,20 @@ export function LoginAuthForm() {
   const [urlError, setUrlError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check query params first
     if (errorCode === "otp_expired") {
       setUrlError(t("authErrorOtpExpired"));
-    } else if (errorCode === "auth_callback_failed") {
+      return;
+    }
+
+    // Also check hash fragment (Supabase sometimes puts errors there)
+    const hash = window.location.hash;
+    if (hash.includes("error_code=otp_expired")) {
+      setUrlError(t("authErrorOtpExpired"));
+    } else if (
+      hash.includes("error=access_denied") ||
+      hash.includes("auth_callback_failed")
+    ) {
       setUrlError(t("authErrorCallbackFailed"));
     }
   }, [errorCode]);
